@@ -1,0 +1,2066 @@
+												OOPs
+									(Object Oriented Programming)
+									=============================
+SOLID Principles:
+	S Single Responsibility Principle (SRP)
+	O Open/Closed Principle (OCP)
+	L Liskov Substitution Principle (LSP)
+	I Interface Segregation Principle (ISP)
+	D Dependency Inversion Principle (DIP)
+
+Object Oriented Programming Principles:
+---------------------------------------
+Data Security, Resuable Code
+
+Encapsulation, Abstraction, Inheritance, Polymorphism, Message Passing (pass by value, pass by reference)
+
+Types of classes: interface, abstract class, class, final class, inner class, anonymous class, enum
+
+All access modifiers (abstract, static, final, transient, volatile, native, synchronized)
+
+super & this keywords
+
+SOLID Principle:
+----------------
+https://dzone.com/articles/solid-grasp-and-other-basic-principles-of-object-o
+
+https://www.bmc.com/blogs/solid-design-principles/#:~:text=The%20broad%20goal%20of%20the,of%20software%20without%20impacting%20others.&text=Ultimately%2C%20using%20these%20design%20principles,%2C%20effective%2C%20and%20agile%20software.
+
+https://www.c-sharpcorner.com/UploadFile/SukeshMarla/object-oriented-design-principles/
+
+https://java-design-patterns.com/principles/
+
+• Single responsibility principle (SRP): This principle states that a software component (function, class, or module) should focus on one unique task (have only one responsibility).
+
+• Open/closed principle (OCP): This principle states that software entities should be designed with application growth (new code) in mind (should be open to extension), but the application growth should require the fewer possible number of changes to the existing code (be closed for modification).
+
+• Liskov substitution principle (LSP): This principle states that we should be able to replace a class in a program with another class as long as both classes implement the same interface. After replacing the class, no other changes should be required, and the program should continue to work as it did originally.
+
+• Interface segregation principle (ISP): This principle states that we should split interfaces that are very large (general-purpose interfaces) into smaller and more specific ones (many client-specific interfaces) so that clients will only need to know about the methods that are of interest to them.
+
+• Dependency inversion principle (DIP): This principle states that entities should depend on abstractions (interfaces) as opposed to depending on concretion (classes).
+
+The broad goal of the SOLID principles is to reduce dependencies so that engineers change one area of software without impacting others. ... Ultimately, using these design principles makes it easier for software engineers to avoid issues and to build adaptive, effective, and agile software.
+
+Types of Classes we will implement in OOP/Java:
+-----------------------------------------------
+In Java we will write varieties of classes:
+i) Java Beans/POJO (Plain Old Java Object)/DTO (Data Transfer Object)/VO (ValueObject)/BO (Business Object)/Entity class/Domain Object/Vanilla Bean.
+
+	class Student implements Serializable, Comparable {
+		private int sid;
+		private String sname;
+		private String email;
+		private long mobile;
+		private String course;
+		
+		Student() {}
+		// parameterized constructor
+		// pair of setter and getter methods
+		
+		public int compareTo(Object o) {
+			Student s=(Student)o;
+			if(this.sid<s.sid) 
+				return -1;
+			else if(this.sid>s.sid)
+				return 1;
+			else
+				return 0;
+		}
+		
+		// override equals(), hashCode(), toString()
+		public boolean equals(Object o) {
+			boolean flag=false;
+			
+			if(o instanceof Student) {
+			
+				Student s1=(Student)o;
+				
+				if(this.sid==s1.sid && this.sname.equals(s1.sname) && this.email.equals(s1.email) && this.mobile==s1.mobile && this.course.equals(s1.course)) {
+					flag=true;
+				}
+			}
+			
+			return flag;
+		}
+		
+		public String toString() {
+			return sid+" "+sname+" "+email+" "+mobile+" "+course;
+		}
+		
+		// convert variable length String into fixed length integer for faster comparision
+		public int hashCode() {
+			return toString().hashCode();
+		}
+		
+		public Object clone() {
+			// deep cloning & shallow cloning
+			
+			// shallow cloning
+			// return this;
+			
+			// deep cloning
+			Student s1=new Student();
+			s1.setSid(this.sid);
+			s1.setSname(this.sname);
+			s1.setEmail(this.email);
+			s1.setMobile(this.mobile);
+			s1.setCourse(this.course);
+			return s1;
+		}		
+	}
+
+	class Emp implements Serializable, Comparable {
+		int eid;
+		String ename;
+		double sal;
+		String desig;
+	}
+	
+	class Course {
+		int cid;
+		String cname;
+		int duration;
+		String content;
+	}
+	
+	class CourseBatch implements Serializable, Comparable {
+		int bid;
+		Course couse;
+		Faculty faculty;
+		// Student students[];
+		List<Student> students;
+	}
+
+ii) Standalone classes
+		which contains main() method to run on command prompt
+iii) Factory classes
+		Classes which creates objects of other classes
+iv) Validator  classes
+		NotNull, MinLength, MaxLength, Date, Email, URL, CreditCard, PANCard, AadharCardNo, SSNo, ZIP, Pattern/RegExpr validatons
+v) Business logic/ Service classes
+		calSal(), calTaxAmount(), calTotalCartAmount(), calTotalMarks(), calGrade(), calPercentage()
+vi) DAO (Data Access Object) classes
+		To implements JDBC/File IO API to implement CRUD operation
+vii) Thread classes
+		To implement Threads to make multiple methods run simultaneously
+viii) Comparable classes
+		To natural sort objects in collections based on default/PK/ID property
+		public int compareTo(Object o) {}
+ix) Comparator classes
+		To natural sort objects in collections based on other properties
+		public int compare(Object lhs, Object rhs) {}
+x) Remote classes
+		RMI, CORBA, EJB, SOAP WebServices, RESTful WebServices
+xi) Web Components / Servlet classes
+		Servlets, JSP classes
+xii) Tag Library Classes
+
+
+
+Encapsulation:
+--------------
+	public class, implement class from Serializable, declare variables as private, one no parameter constructor, one parameterized constructor, one pair of setter and getter methods, overriding equals(), hashCode() and toString() methods.
+
+Hiding data members / variables of a class and expose them through setter and getter methods. For that we need to declare class instance variables as private.
+
+Emp.txt / table:emp
+1&ABC&10000.00&Designer
+2&XYZ&20000.00&Developer
+3&LMN&30000.00&Tester
+4&PQR&40000.00&Analyst
+
+To access data from the .txt file into Java Bean, in the bean the variables are declared as private, to the required member variables setter and getter methods are provided (setEid(int eid), getEname(), getSal(), getDesig()) and also one more method implemented in the class named retrieveEmp(), once after setting eid through setter method in the client program we must call retrieveEmp() method which retrieves requested emp details from file/db/network/cloud and through getter methods we can access ename, sal & desig. The bean is encapsulated in such a way that others cannot modify ename, sal, and desig.
+
+// Emp.java
+public class Emp {
+	int eid;
+	String ename;
+	double sal;
+	String desig;
+}
+
+// EmpClient.java
+public class EmpClient {
+   public static void main(String rags[]) {
+     Emp e=new Emp();
+     e.eid=1;
+     e.ename="ABC";
+     e.sal=100000.00;
+     e.desig="Developer";
+	 System.out.println(e.ename);
+   }
+}
+
+If variables are not declared as private then classes outside of our class can instantiate Emp bean and its variables can be directly accessed and modified. There is no security to member variables of our class.
+
+If variables are declared as private after instantiating Emp object Emp e=new Emp();, if outside class tries to access using e.eid=1; or e.ename="ABC"; then compiler immediately raises error saying private variables cannot be accessed outside the class.
+
+Hence we provide required setter() and getter() methods. only getter methods are provided to ename, sal and desig. Then those variables cannot be modified. Cannot be modified by even authorized members of our org. If modification privileges want to be provided only to authorized members of our org, then in each setEname() along with String we must also ask for auth pass, similarly in setSal() and setDesig() also. Unless if the member is authorized they cannot modify ename, sal, desig.
+
+// Emp.java
+import java.io.*;
+import java.util.*;
+public class Emp {
+
+  private int eid;
+  private String ename;
+  private double sal;
+  private String desig;
+  
+  public Emp() {
+  }
+
+  public void setEid(int eid) {
+    this.eid=eid;
+  }
+  public int getEid() {
+    return eid;
+  }
+
+  /* public void setEname(String ename) {
+    this.ename=ename;
+  } */
+  public String getEname() {
+    return ename;
+  }
+
+  /* public void setSal(double sal) {
+    this.sal=sal;
+  }*/
+  public double getSal() {
+    return sal;
+  }
+
+  /* public void setDesig(String desig) {
+    this.desig=desig;
+  }*/
+  public String getDesig() {
+    return desig;
+  }
+
+				/*
+				 saveEmp/updateEmp/deleteEmp/findEmp/findAllEmps/findEmpByName/findEmpsByDesig
+				 Emp[] findEmpsByDesig(String desig)
+				 Emp[] findAllEmps()
+				 boolean deleteEmp(int eid)
+				*/
+				 
+  public boolean retrieveEmp() {
+  
+	boolean flag=false;  
+    try {
+      RandomAccessFile raf=new RandomAccessFile("Emp.txt", "r");
+      String line=raf.readLine();
+
+      while(line!=null) {
+        StringTokenizer st=new StringTokenizer(line,"&");
+        int tempeid=Integer.parseInt(st.nextToken());
+		
+        if(this.eid==tempeid) {
+          ename=st.nextToken();
+          sal=Double.parseDouble(st.nextToken());
+          desig=st.nextToken();
+		  flag=true;
+		  break;
+        }// if()
+        line=raf.readLine();
+      }// while()
+	  
+      if(flag==false)
+		  System.out.println("Emp record "+eid+" not found");
+   }// try
+   catch(Exception e) {} 
+   
+   return flag;
+   
+  }// retrieveEmp()
+}
+
+
+// EmpClient.java
+import java.util.*;
+public class EmpClient {
+  public static void main(String rags[]) throws Exception {
+    Emp e=new Emp();
+	Scanner sc=new Scanner(System.in);
+	System.out.println("Please enter EID");
+	int eid=sc.nextInt();
+    e.setEid(eid);
+    boolean found=e.retrieveEmp();
+	if(found==true)	{
+		System.out.println(e.getEid());
+		System.out.println(e.getEname());
+		System.out.println(e.getSal());
+		System.out.println(e.getDesig());
+	}
+  }
+}
+
+Abstraction:
+------------
+Exposing functionality, hiding method implementation.
+Hiding behaviour implementation from behaviour. 
+Hiding method implementation from method name and signature.
+Hiding method implementation from method declaration is called as Abstraction.
+Client needs not have to know 
+	- how method is implemented 
+	- and in which (sub) class the method is implemented
+
+Various datasource to store data permenently in applications we use .txt files, Excel files (.xlsx), Databases/RDBMS (Oracle, MySQL, SQLServer, DB2 etc), NoSQL Databases (MongoDB, Cassandra etc), Cloud DB, XML, JSON.
+
+The benefit of abstraction is to achieve Run Time Polymorphism (RTP). If abstraction doesn't exist and in Emp.java in retrieveEmp() method if the emp details are retrieved from file and when such a class is used by the client, client will always get the emp data from file system but not from excel/DB/cloud.
+
+As and when the client want Emp class to fetch data from excel/DB then provider must write one more version of Emp class and such a class should be provided to client again.
+
+Client may often need to change Emp class instantiation wherever Emp class is used through out the application which is pratically impossible.
+
+Provider instead of providing a Emp class with retrieveEmp() method implementation, if retrieveEmp() method is declared as abstract in Emp class, the class also must be declared as abstract.
+
+The abstract class must be implemented in one sub class named EmpV1, implements retrieveEmp() method with JDBC code and in Emp.java one static method must be provided that returns Emp class type of object as return type, return EmpV1 object as return value.
+
+As an when new EmpV2 or EmpV3 is produced with latest implementations like retrieving from Excel/DB/Cloud, then must change the object instantiation statement from new EmpV1() to new EmpV2() or new EmpV3();
+
+When client requests static method client always gets latest Emp class object without his knowledge.
+
+Client request to retrieveEmp() method always goes to latest implemented method in EmpV3 or EmpV4.
+
+This is called as runtime polymorphism. To achieve RTP method overriding is used because Emp class method is implemented in multiple sub classes.
+
+What are different DataStores exist?
+i) Plain Text Files		- RandomAccessFile
+ii) Spreadsheet/Excel Files		- Apache POI
+iii) RDBMS (local/remote server)	- JDBC
+iv) XML Files		- JAXP
+v) JSON Files		- JSONP
+vi) No-SQL DB		- MongoDB/Hibernate
+vii) Cloud DB		- CloudDB API
+viii) 
+ix) 
+x) 
+
+Ex #1:
+------
+emp.txt
+-------
+1&ABC&10000.00&Designer
+2&XYZ&20000.00&Developer
+3&LMN&30000.00&Tester
+4&PQR&40000.00&Analyst
+
+// Emp.java
+import java.io.*;
+import java.util.*;
+abstract class Emp {
+
+  private int eid;
+  private String ename;
+  private double sal;
+  private String desig;
+
+  public void setEid(int eid) {
+    this.eid=eid;
+  }
+  public int getEid() {
+    return eid;
+  }
+
+  protected void setEname(String ename) {
+    this.ename=ename;
+  }
+  public String getEname() {
+    return ename;
+  }
+
+  protected void setSal(double sal) {
+    this.sal=sal;
+  }
+  public double getSal() {
+    return sal;
+  }
+
+  protected void setDesig(String desig) {
+    this.desig=desig;
+  }
+  public String getDesig() {
+    return desig;
+  }
+
+  abstract void retrieveEmp();
+  
+  public static Emp getEmp() {
+    return new EmpV7(); // Versioning implementation using Abstraction
+  }
+  
+}
+
+class EmpV1 extends Emp {
+  void retrieveEmp() {
+	// file access
+	System.out.println("emp access from file");
+  }
+}
+
+class EmpV2 extends Emp {
+  void retrieveEmp() {
+	// Apache POI
+	System.out.println("emp access from Excel/.xls");
+  }
+}
+
+class EmpV3 extends Emp {
+  void retrieveEmp() {
+	// JDBC
+	System.out.println("emp access from DB");
+  }
+}
+
+class EmpV4 extends Emp {
+  void retrieveEmp() {
+	// JAXP
+	System.out.println("emp access from XML");	
+  }	
+}
+
+class EmpV5 extends Emp {
+  void retrieveEmp() {
+	// JSONP
+	System.out.println("emp access from JSON");
+  }	
+}
+
+class EmpV6 extends Emp {
+  void retrieveEmp() {
+	// NoSQLDB
+	System.out.println("emp access from NoSQL DB");
+  }	
+}
+
+class EmpV7 extends Emp {
+  void retrieveEmp() {
+	// CloudDB
+	System.out.println("emp access from Cloud DB");
+  }	
+}
+
+// EmpClient.java
+class EmpClient {
+	public static void main(String rags[]) {
+		Emp e=Emp.getEmp();
+		System.out.println(e.getClass().getName());
+		e.setEid(1);
+		e.retrieveEmp();
+		System.out.println(e.getEname());
+		System.out.println(e.getSal());
+		System.out.println(e.getDesig());
+	}
+}
+
+Ex #2
+-----
+// StudentAdmission.java
+class StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group) {
+		// validate the data (qual, dob, group)
+		// store the admission details
+		// return admissionid
+	} 
+}
+
+class SAClient {
+	public static void main(String rags[]) {
+		StudentAdmission sa=new StudentAdmission();
+		sa.admitStudent(rags[0], rags[1], rags[2], rags[3]); 
+	}
+}
+
+If college is having only day scholar admissions.
+
+Now college started residential & NRI student admissions also.
+
+// StudentAdmission.java
+class StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group, String admType) {
+		if(admType.equals("Day Scholar")) {
+			// validate the data
+			// store the admission details
+			// return admissionid
+		} else if (admType.equals("Residential")) {
+			// validate the data
+			// which type of hostel / mess
+			// store the admission details, hostel & mess details
+			// return admissionid		
+		} else if (admType.equals("NRI")) {
+			// validate the data
+			// which type of hostel / mess
+			// store the admission details, hostel & mess details
+			// validate passport, visa, immigration certification and store those details
+			// return admissionid					
+		} else {
+			do nothing/raise error
+		}
+	} 
+}
+
+In OOP the above way of implementing student implementation is wrong. What is wrong?
+Writing different ways of implementing method in a single method is wrong.
+
+// StudentAdmission.java
+abstract class StudentAdmission {
+
+	abstract void admitStudent(String sname, String qual, String dob, String group);
+	
+	static StudentAdmission getStudentAdmission(String admType) {
+		if(admType.equals("DayScholar")) {
+			return new DayScholarStudentAdmission();
+		} else if(admType.equals("Residential")) {
+			return new ResidentialStudentAdmission();
+		} else if(admType.equals("NRI")) {
+			return new NRIStudentAdmission();
+		} else if(admType.equals("ExServiceman")) {
+			return new ExServicemanStudentAdmission();
+		} else if(admType.equals("PhysicallyChallenged")) {
+			return new PhysicallyChallengedStudentAdmission();
+		} else if(admType.equals("Reservation"))
+			return new ReservationStudentAdmission();
+		} else {
+			System.out.println("Your admType: "+admType+" is wrong");
+		}
+	}
+	
+}
+
+day scholar/residential/NRI/ex-serviceman/physically challenged/reservation
+
+// DayScholarStudentAdmission.java
+class DayScholarStudentAdmission extends StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group) {
+		System.out.println("DayScholarStudentAdmission accepted");
+	}
+}
+
+// ResidentialStudentAdmission.java
+class ResidentialStudentAdmission extends StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group) {
+		System.out.println("ResidentialStudentAdmission accepted");			
+	}
+}
+
+// NRIStudentAdmission.java
+class NRIStudentAdmission extends StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group) {
+		System.out.println("NRIStudentAdmission accepted");			
+	}
+}
+
+// ExServicemanStudentAdmission.java
+class ExServicemanStudentAdmission extends StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group) {
+		System.out.println("ExServicemanStudentAdmission accepted");			
+	}
+}
+
+// PhysicallyChallengedStudentAdmission.java
+class PhysicallyChallengedStudentAdmission extends StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group) {
+		System.out.println("PhysicallyChallengedStudentAdmission accepted");			
+	}
+}
+
+// ReservationStudentAdmission.java
+class ReservationStudentAdmission extends StudentAdmission {
+	void admitStudent(String sname, String qual, String dob, String group) {
+		System.out.println("ReservationStudentAdmission accepted");			
+	}
+}
+
+// SAClient.java
+import java.util.*;
+class SAClient {
+	public static void main(String rags[]) {
+		Scanner sc=new Scanner(System.in);
+		
+		System.out.println("Please enter Admission Type");
+		String admType=sc.next();
+		
+		StudentAdmission sa=StudentAdmission.getStudentAdmission(admType);
+		// sa points to differnt class objects of same type
+		
+		// same object reference (means sa), points to different class objects at runtime
+		// calling method on such runtime objects is called as runtime polymorphism
+		
+		System.out.println("Please enter Student Name");
+		String sname=sc.next();
+		
+		System.out.println("Please enter Qualification");
+		String qual=sc.next();
+		
+		System.out.println("Please enter DOB");
+		String dob=sc.next();
+
+		System.out.println("Please enter Group");
+		String group=sc.next();
+		
+		sa.admitStudent(sname, qual, dob, group); // this is called as runtime polymorphism
+		
+	}
+}
+
+VVVVVV.................Imp Point:
+---------------------------------
+The purpose/benefit of Abstraction is to achieve Runtime Polymorphism (RTP).
+Runtime Polymorphism means Runtime method choosing.
+On which class object we want to invoke method, choosing that object at runtime is called as RTP.
+
+Ex #3:
+------
+Before Encapuslation:
+---------------------
+// EmpPayroll.java
+class EmpPayroll {
+	void calSal(int eid) {
+		System.out.println("nowd*pds");
+	}
+}
+
+// EPClient.java
+class EPClient {
+	public static void main(String rags[]) {
+		EmpPayroll ep=new EmpPayroll();
+		int eid = Integer.parseInt(rags[0]);
+		ep.calSal(eid);
+	}
+}
+
+If Emp types increases, for each type of Emp different salary calculation is required.
+
+AdminEP, TeachingEP, DeveloperEP, HREP, MarktEP
+
+After Encapsulation:
+--------------------
+// EmpPayroll.java
+abstract class EmpPayroll {
+	abstract void calSal(int eid);
+}
+
+// AdminEP.java
+class AdminEP extends EmpPayroll {
+	void calSal(int eid) {
+		System.out.println("nowd*pds");
+	}
+}
+
+// TeachingEP.java
+class TeachingEP extends EmpPayroll {
+	void calSal(int eid) {
+		System.out.println("(nowd*pds)+(addtStudents*incentive)");
+	}
+}
+
+// DeveloperEP.java
+class DeveloperEP extends EmpPayroll {
+	void calSal(int eid) {
+		System.out.println("(nowd*pds)+(addtProjects*incentive)");
+	}
+}
+
+// HREP.java
+class HREP extends EmpPayroll {
+	void calSal(int eid) {
+		System.out.println("(nowd*pds)+(addtRecruitments*incentive)");
+	}
+}
+
+// MarktEP.java
+class MarktEP extends EmpPayroll {
+	void calSal(int eid) {
+		System.out.println("(nowd*pds)+(addtSalesAmt*comm)");
+	}
+}
+
+// The following factory method produces EmpPayroll class family of objects
+// EPFactory.java
+class EPFactory {
+	public static EmpPayroll getEmpPayroll(String epType) {
+		if(epType.equals("Admin")) {
+			return new AdminEP();
+		} else if(epType.equals("Teaching")) {
+			return new TeachingEP();
+		} else if(epType.equals("Developer")) {
+			return new DeveloperEP();
+		} else if(epType.equals("HR")) {
+			return new HREP();
+		}else if(epType.equals("Markt")) {
+			return new MarktEP();
+		} else {
+			return null;
+		}
+	}
+} 
+
+// EPClient.java
+import java.util.*;
+class EPClient {
+	public static void main(String rags[]) {
+		Scanner sc=new Scanner(System.in);
+		
+		System.out.println("Which EmpPayroll type object you want (Admin/Teaching/Developer/HR/Markt)");
+		
+		String empType=sc.next();
+		EmpPayroll ep=EPFactory.getEmpPayroll(empType);
+		
+		System.out.println("Please enter eid");
+		int eid=sc.nextInt();
+		
+		ep.calSal(eid);
+	}
+}
+
+javac EPClient.java
+
+java EPClient 	
+Admin 
+1
+Teaching 
+2
+Developer 
+3
+HR 
+4
+Markt 
+5
+				
+
+
+									Inheritance (IS-A Relationship)
+									===============================
+def:
+	Inheritance mechanism deals with deriving one class from another class.
+purpose:
+	To mainly achieve reusability of code.
+What to do:
+	Add extra functions to an already existing functions
+	We can rewrite super class functions in sub class/ super class functionality can be overriden
+When to use:
+	- If i want to write my own wrapper class, the class must extend from Number super class.
+	- If i want to write my own Thread classes, then the class must extend from Thread class or implements from Runnable interface
+	- If i want to write my own exception class, then the class must extend from Exception or RuntimeException
+	- If i want to write my own Collection classes like ArrayList, HashSet, TreeSet, TreeMap, HashMap, then my class must implement from Collection interface or must extend from AbstractCollection
+	- If i want to develop my own UI Component class like Label, TextField, TextArea, Checkbox, List, Scrollbar, Menu, MenuItem, MenuBar, then my class extend from Component class
+	- To create user UI application then write a class that extend from Frame or JFrame
+	- Write user defined JDBC driver class, user defined Servlet class etc
+	- To write user defined Servlet from GenericServlet or HttpServlet
+	
+	- If a class methods want to be available as our class methods to outside classes, then we go inheritance
+	- If i want to rewrite the functionality of super class methods in sub class, then also we will go for inheritance
+	- If i want to add additional functionality to the existing super class methods then also i will go for inheritance
+	
+Developer perspective:
+	super class first, sub class next
+Designer perspective:
+	multiple similar classes first, super class next, followed by those similar classes becomes sub classes
+	
+Wrapper Classes:
+----------------
+							Object
+								|
+							Number implements Serializable, Comparable
+								| byteValue(), shortValue(), intValue(), longValue(), floatValue(), doubleValue()
+---------------------------------------------------------------------
+|					|			|			|			|				|
+byte			short		int			long		float		double	char		boolean
+Byte			Short		Integer		Long		Float		Double	Character	Boolean
+byteValue()					byteValue()							
+shortValue()				shortValue()												
+intValue()					intValue()											
+longValue()					longValue()											
+floatValue()				floatValue()												
+doubleValue()				doubleValue()
+
+
+byte b1=10;
+Byte by=new Byte(b1);
+short s1=by.shortValue();
+int i1=by.intValue();
+long l1=by.longValue();
+float f1=by.floatValue();
+double d1=by.DoubleValue();
+
+int i2=1234;
+Integer in=new Integer(i2);
+byte b2=in.byteValue();
+short s2=in.shortValue();
+long l2=in.longValue();
+float f2=in.floatValue();
+double d2=in.doubleValue();
+
+
+How to identify super class?
+When a class similar class comes then we realize the importance of super class.
+
+GUI Classes (java.awt/javax.swing):
+-----------------------------------
+									Component
+										|
+-----------------------------------------------------------------------------------------
+|				|				|			|			|		|			|		    |
+Label		TextField		TextArea	Password	Button	Checkbox	  List 		Scrollbar
+
+setInset(x,y,w,h)
+getInset()
+setHeight()
+getHeight()
+setWidth()
+getWidth()
+setFont()
+getFont()
+setBackgroundColor()
+getBackgroundColor()
+setBackgroundImage()
+getBackgroundImage()
+setColor()
+getColor()
+setVisible()
+getVisible()
+setEditable()
+getEditable()
+setEnable()
+getEnable()
+setText()
+getText()
+setValue()
+getValue()
+
+
+Types of Inheritance:
+---------------------
+i) Single Inheritance
+ii) Multi-Level Inheritance
+iii) Multiple Inheritance
+iv) Hierarchial Inheritance
+v) Hybrid Inheritance
+
+i) Single Inheritance
+---------------------
+In Single Inheritance sub class/child class/derived class inherits "only one" parent class properties/variables and behaviours/methods thus enable reusability and as well adding new behaviours or modifying existing behaviours.
+
+										A	Parent Class
+										^
+										|
+										B	Child Class
+										
+In inheritance child class must point to parent class, but not parent class to sub class. We must say Sub Class B is derived from Parent Class A.
+
+class A {}
+class B extends A {}
+
+ii) Multi-Level Inheritance
+---------------------------
+In Multi-Level Inheritance each sub class derives from only one super class at a time, that super class again derives from only one more super class at a time.
+
+										A
+										^
+										|
+										B
+										^
+										|
+										C
+										^
+										|
+										D
+
+class A {}
+class B extends A {}
+class C extends C {}
+class D extends C {}
+ 
+	iii) Multiple Inheritance
+	-------------------------------
+	In Multiple Inheritance a sub class can derive from any number of super classes, such super classes each can again derive from any number of super classes.
+
+	Advantages:
+	More inheritance, more vars & methods in a short time
+
+	Disadvantges:
+	more complex heirarchy
+	more un-necessary memory wastage
+	super class var/method ambiguity problem
+		
+			A1 A2 A3  B1 B2	  C1 C2 C3
+			|  |  |   |  |    |  |  |
+			x	  x				 x
+			-------------------------
+				A		B		C
+				x		y		x
+				|		|		|
+				-----------------
+						^
+						|
+						D
+						x
+						print(this.x)
+						print(super.x)
+
+	D d=new D();
+
+iv) Hierarchial Inheritance
+---------------------------
+In Hierarchial Inheritance a class can be derived into any number of sub classes.
+								A
+								|
+						-----------------
+						|		|		|
+						B		C		D
+					-------------------------------	
+					|   |  |	|   |    |  |  |  |
+					B1 B2 B3	C1 C2	D1 D2 D3 D4
+
+v) Hybrid Inheritance
+---------------------
+Hybrid Inheritance is a combination of heirarchial and multiple inheritance.
+								
+								A
+								|
+						-----------------
+						|				|
+						B				C
+						-----------------
+								|
+								D
+
+								
+Imp Point: Java supports only multi-level inheritance. Hence in Java each class can derive from only one super class at a time.
+
+Example on Multi-level Inheritance:
+-----------------------------------
+class A {
+	void m1() {
+		System.out.println("m1() of A called ");
+	}
+}
+
+class B extends A {
+	void m2() {
+		System.out.println("m2() of B called ");
+	}
+}
+
+class C extends B {
+	void m3() {
+		System.out.println("m3() of C called ");
+	}
+}
+
+class D {
+
+	public static void main(String rags[]) {
+		A a=new A();
+		a.m1();
+		
+		B b=new B();
+		b.m1();
+		b.m2();
+		
+		C c=new C();
+		c.m1();
+		c.m2();
+		c.m3();
+		
+		// super class object reference assigned to sub class reference
+		// B b=new A(); // gives error
+		
+		// sub class object assigned to super class reference
+		A ab=new B();
+		ab.m1();
+		// ab.m2(); // cannot be called, only B and A class common methods can only be called
+		
+		A ac=new C();
+		ac.m1();
+		// ac.m2(); // error
+		// ac.m3(); // error
+		
+		B bc=new C();
+		bc.m1();
+		bc.m2();
+		// bc.m3(); // error
+	}
+}
+
+Examples on assigning sub class objects to super class references. Remember only common functions can be called.
+
+	Frame f =new MyFrame();
+	Panel p=new MyPanel();
+	Emp e=new PermanentEmp();
+	Student s=new DayScholarStudent();
+	Customer c=new GoldCardCustomer();
+
+
+Types of classes in Java:
+-------------------------
+i) interface (pure abstract class) - collection of only abstract methods
+ii) Abstract class - collection of both abstract and implemented methods
+iii) Class
+iv) Final class
+v) Inner class
+vi) Anonymous class
+vii) Enum
+
+interface:
+----------
+interface is a default abstract class, pure abstract class.
+
+interface is also similar to a class except in interface all the methods are abstract. No method is found with implementations in interface.
+
+interface must be created using 'interface' keyword at the beginning followed by interface name. interface must be enclosed in flower braces.
+
+Two imp points:
+---------------
+	+ In interface all variables are public, static, final by default.
+	+ and all methods are public abstract by default.
+	+ interfaces are implicitly prefixed with abstract modifier.
+
+// MyInterface.java
+abstract interface MyInterface {
+   int min_age;
+   void method1() {}
+}
+
+javac MyInterface.java
+
+compilation error comes saying that interface variables are final so that min_age variable must be initialized and also says interface cannot contain implemented methods.
+
+// MyInterface.java
+interface MyInterface {
+   int MIN_AGE=18;
+   void method1();
+}
+
+javac MyInterface.java
+
+The .java file is compiled and .class file is produced. In that .class file we will notice.
+
+// MyInterface.java
+abstract interface MyInterface {
+   public static final int MIN_AGE=18;
+   public abstract void method1();
+}
+
+In interface all variables are by default public static final and all methods are public abstract by default. Because interface is pure abstract class, it cannot be instantiated, it can be only inherited.
+
+point #1
+why interface variables are static?
+Because interface cannot be instantiated, if its variables want to be accessed they must be static. Then static variables can be accessed using interfacename.varname
+
+point #2
+why interface variables are final?
+Why interface variables are final by default because in multiple inheritance super class variable ambiguity problem arises. How?
+
+class A {
+	int x=10;
+	public void m1() {}
+}
+
+interface B {
+	public static final int x=11;
+	public abstract void m1();
+}
+
+interface C {
+	public static final int x=12;
+	public abstract void m1();
+	public abstract void m2();
+}
+
+// a class extending from multiple super classes is multiple inheritance. Like in C++
+class D extends A, B, C { }
+
+// In multiple inheritance, implemented methods are derived from multiple super classes
+// In java we are getting implemented methods from only one super class and getting declared / abstract methods from multiple super interfaces. Hence java is multi-level inheritance based classes.
+
+// following is a multi-level inheritance
+class D extends A implements B, C {
+
+	int x=13;
+	
+	void m10() {
+		int x=14;
+		System.out.println(x); // 14
+		System.out.println(this.x); // 13
+		System.out.println(super.x); // 10
+		System.out.println(B.x); // 11
+		System.out.println(C.x); // 12
+	}
+	
+	public void m1() {}
+	public void m2() {}
+}
+
+class DClient {
+	public static void main(String rags[]) {
+		D d=new D();
+		d.m10();
+	}
+}
+
+Suppose if class E derives from A,B,C,D classes in which a variable is declared commonly in all the super classes initialized with different values. E class is also having a variable called a. While compiling complier complies E successfully because E class a variable can be called with this.a and a variable coming from four super classes one variable reinitializes other variable. But while running java program if we invoke super.a then runtime environment detects they are four super classes found and 'a' variable is ambiguously found in all the super classes, runtime environment gives error at runtime.
+
+But since java supports multi-level but not multiple inheritance we can extend from only one super class at a time and can inherit from multiple interfaces at a time.
+
+The same case when happen with interface, if A is declared as class containing a variable, B,C,D are if declared as interfaces declare same 'a' variable with different values.
+
+If class E derives from A class and implement from B,C,D interfaces. Compiler accepts that 'a' variable derived from A is reinitialized with 'a' variable derived from B, that to super class variable becomes final if the same variable tries to be reinitialized deriving from C and D, compiler gives an error saying final variable derived from super class cannot be reinitialized because it is already a final variable.
+
+Hence we must avoid inheriting E from C and D or change the variable names in C and D.
+
+Why interface variables are static too?
+There are 2 reasons:
+Because if final variable is not declared as static as many instances of interface are created (mean sub classes of interface are instantiated) in those many instances final variable memory will be allocated.
+
+Because interfaces cannot be instantiated its variable can be accessed via directly by calling interfacename.variablename because they are static.
+
+Why interface methods are abstract by default?
+----------------------------------------------
+a) You write a class with 5 methods implementation
+Declare 3 methods as abstract in one interface and declare the remaining two methods in one more interface. Give interface1 to one client using which the user can access only 3 methods of implementation class but not the other two. Give interface2 to one more client using which the second user can access only the last methods implementation class.
+
+E:\active\core\am3\javalang\oops\abstraction inheritance polymorphism\interface
+// interface1.java
+interface interface1 {
+   public void method1();
+   public void method2();
+   public void method3();
+}
+
+// interface2.java
+interface interface2 {
+   public void method4();
+   public void method5();
+}
+
+// interface3.java
+interface interface3 extends interface1, interface2 {
+}
+
+
+Why interface is named as interface?
+With the help of interfaces a class can have many faces.
+
+// InterfaceImplementationClass.java
+class InterfaceImplementationClass implements interface1, interface2 {
+   public void method1() {
+      System.out.println("method1() called");
+   }
+   public void method2() {
+      System.out.println("method2() called");
+   }
+   public void method3() {
+      System.out.println("method3() called");
+   }
+   public void method4() {
+      System.out.println("method4() called");
+   }
+   public void method5() {
+      System.out.println("method5() called");
+   }
+}
+
+// Client1.java
+public class Client1 {
+   public static void main(String rags[]) {
+       /*
+	   Though we are creating object of InterfaceImplementationClass if we take the reference into Interface1 we can access only the interface and implementation class common methods.
+	   */
+       interface1 i1=new InterfaceImplementationClass();
+       i1.method1();
+       i1.method2();
+       i1.method3();
+       // i1.method4(); // cannot find symbol
+       // i1.method5(); // cannot find symbol
+   }
+}
+
+// Client2.java
+public class Client2 {
+   public static void main(String rags[]) {
+       /*
+	   Though we are creating object of InterfaceImplementationClass if we take the reference into Interface1 we can access only the interface and implementation class common methods. 
+	   */
+       interface2 i2=new InterfaceImplementationClass();
+       // i2.method1(); // cannot find symbol
+       // i2.method2(); // cannot find symbol
+       // i2.method3(); // cannot find symbol
+       i2.method4();
+       i2.method5();
+   }
+}
+
+super class forcing to implement methods in subclass:
+-----------------------------------------------------
+Why super class forces sub classes to implement their methods is to maintain uniform number of methods in all sub classes. Because of this feature java programs became vendor independent.
+
+For example our java classes sometimes runs on other runtime environments such as web server, application server, DB etc. If the server expects some methods on our to run them at runtime. WebServer indirectly forces us to implement from an interface, unless we implement all the methods derived from interface our class cannot be compiled. For example Servlet, Runnable, Cloneable etc.
+
+runtime polymorphism:
+---------------------
+EmpPayroll, Admin, Sales,ProdEmpPayroll classes.
+Printer, STDOUTPrinter, FilePrinter
+Emp, EmpV1, EmpV2, EmpV3 etc
+
+Reducing method overloading burden:
+-----------------------------------
+Outputter class print() method takes Printer interface type object as argument. The Printer interface sub classes may be STDOUTPrinter, FilePrinter, DBPrinter, SocketPrinter, PrinterPrinter, CloudPrinter
+
+Abstract class
+--------------
+If class contains abstract methods then it must be declared as abstract.
+Abstract class may or may not contain abstract methods.
+
+Without abstract methods why class is declared as abstract?
+If class don't want to be instantiated then it is declared as abstract class. Abstract Class cannot be instantiated.
+
+Classes which contain common/generic method implementations to all its sub classes are declared as abstract such as Component/Container classes are Java AWT/Swings, HttpServlet in servlet API, Number class in wrapper classes etc.
+
+Component sub classes are:
+Label, Button, TextField, TextArea, List, Checkbox, CheckboxGroup, H/V Scrollbar, Drop down list
+
+Properties that are commonly required in all component sub classes are:
+x, y, width, height, background, foreground, text, visible, enable, editable, resizeable. These properties needs one pair of setter and getter methods. All together 22 methods are required. These 22 methods implemented in 10 component subclasses together comes to 220 methods. Instead of implementing all 22 methods in all the sub classes. These methods are defined only in one single Component class. Component class itself don't want to be instantiated. Hence it is declared as abstract.
+
+Though generic method implementations coming from abstract super class, if child classes want to override they can override super class methods.
+
+E:\active\core\am3\javalang\oops\abstraction inheritance polymorphism\abstract class
+// AbstractClass.java
+public abstract class AbstractClass {
+    // private abstract void print(String name); 
+	// illegal combination of modifiers: abstract and private
+    protected abstract void print(String name);
+}
+
+// AbstractClassSubClass.java
+public class AbstractClassSubClass extends AbstractClass {
+	public void print(String name) {
+		System.out.println("print() method from AbstractClassSubClass name is "+name);
+	}
+   
+	// weaker access privilege error comes because super class method is protected, it can go upto sub class outside the package
+	/* 
+	void print(String name) {
+	  System.out.println("print() method from AbstractClassSubClass name is "+name);
+	}
+	*/
+}
+
+// AbstractClassClient.java
+public class AbstractClassClient {
+    public static void main(String rags[]) {
+	   AbstractClass ac=AbstractClassSubClass();
+	   ac.print("Surya");
+	}
+}
+
+class:
+------
+To class we can apply default or public access specifier.
+To access modifier is by default applied to class.
+All methods are implemented in class.
+Class can be both inherited and as well as instantiated.
+
+If class is written with default access specifier during compilation compiler will generate one default constructor in the class.
+
+default constructor always generated with no parameters and its access specifier is as same as class access specifier that means if class declared with default access specifier constructor is also generated with default access specifier. If class is declared as public then its constructor is also generated with public access specifier.
+
+// DefaultClass.java
+class DefaultClass {
+  int i, j;
+ 
+  // if we dont write any constructor; compiler by default generates constructor like below 
+  /*
+  DefaultClass() {
+	i=0;
+	j=0;
+  }
+  */
+}
+
+// PublicClass.java
+public class PublicClass {
+  int i, j;
+  
+  // if we dont write any constructor; compiler by default generates constructor like below 
+  /*
+  public PublicClass() {
+	i=0;
+	j=0;
+  }
+  */
+}
+
+// AnotherDefaultClass.java
+class AnotherDefaultClass {
+  int i, j;
+  
+  // no default constructor is generated by compiler
+  
+  // constructor with 2 parameters
+  AnotherDefaultClass(int a, int b)  {
+    this.i=a;
+    this.j=b;
+  }
+  
+  /* if we explicitly generate a no parameter constructor, then default constructor generation is possible in sub class. */
+  AnotherDefaultClass() {}
+}
+
+// AnotherDefaultClassSubClass.java
+class AnotherDefaultClassSubClass extends AnotherDefaultClass {
+
+    int k, l;
+	
+   // before this if no parameter constructor doesn't exist in the super class
+   /* when we dont write any constructor, one default constructor is generated that will implcitly call super(), then during compilation compiler say cannot find symbol AnotherDefaultClass() */
+   
+   // no parameter constructor
+   AnotherDefaultClassSubClass() {
+      super();
+   }
+   
+   // two parameter constructor
+   AnotherDefaultClassSubClass(int a, int b) {
+      super(a,b);
+   }
+   
+   // four parameter constructor
+   AnotherDefaultClassSubClass(int a, int b, int c, int d) {
+      super(a,b);
+	  k=c;
+	  l=d;
+   }
+}
+
+class D extends AnotherDefaultClassSubClass {
+	int m, n;
+	
+	D() {
+		super();
+	}
+	
+	D(int a, int b) {
+		super(a, b);
+	}
+	
+	D(int a, int b, int c, int d) {
+		super(a, b, c, d);
+	}
+	
+	D(int a, int b, int c, int d, int e, int f) {
+		super(a, b, c, d);
+		m=e;
+		n=f;
+	}
+}
+
+
+											final class
+											===========
+Classes which do not want to be derived into subclasses are declared as final. For final classes no child classes hierarchy exist. All wrapper classes such as Integer, Long, Float, Double, String, StringBuffer are all final classes. Math class is also final in Java API. Classes whose functions do not want to be overriden in sub classes are declared as final. For instance if a class contains 5 final and 5 non final methods. Then such a class is declared as normal class. If all the 10 methods of a class want to be declared as final, instead of declaring all the functions as final, declare class itself as final. Because all the methods are final they are static too. Hence we can call the methods using classname.methodname(). But it not mandatory/no guarantee that final class final methods may be static.
+
+In Java API all wrapper classes are final. Hence we can use them (we can instantiate and call their methods), but we cannot inherit them.
+
+java.lang.String, java.lang.Integer, java.lang.Double, java.lang.Math
+
+ 
+
+								inner class/nested class (class inside a class)
+								===============================================
+class written in a class is called as inner class. to class only default and public access specifiers can be applied but to inner classes protected and private access specifier can also be applied because like variable and method inner class is also a member of outer class. If inner class and outer class are declared as public and kept in a package they can be accessible anywhere outside the package. If outer is declared as public and inner class is declared as default then inner class can be accessible only within the package. If outer class is public and inner class is protected then inner class can be accessible only upto sub class outside the package. If inner class is private the class can be accessible only upto within the methods of outer class.
+
+If inner class is non-static, then to access inner class, outerclass object must be created first, then with the outer class object reference.new innerClass() can be called.
+
+non-static inner class can contain only non-static methods. 
+static inner class can contain both static and non-static methods.
+
+static inner class static method can be called using OuterClass.InnerClass.method()
+static inner class non-static method can be accessed using static inner class object.method(). static inner class object can be created using OuterClass.InnerClass ocic=new OuterClass.InnerClass();
+
+inner class can access outer class non-static variables and methods. But outer class cannot access inner class variables and methods.
+
+inner class non-static methods can access non-static variable and methods of outer class.
+
+But static-inner class, static methods can be access only static variables and methods  of outer class.
+
+this and super keyword can be used only in non-static inner class, but not in static-inner class.
+
+access modifiers that can be applied on inner class are:
+static, final, abstract, private, default, protected and public
+
+// OC.java (OC means OuterClass)
+class OC {
+	int i; // non-static variable/instance variable
+	static int j; // static variable/class variable
+	
+	void print1() {
+		System.out.println(i); // Yes
+		System.out.println(j); // Yes
+	}
+	
+	static void print2() {
+		// System.out.println(i); // No
+		System.out.println(j); // Yes
+	}
+	
+	// non-static inner class
+	class NSIC {
+		void print3() {
+			System.out.println(i); // Yes
+			System.out.println(j); // Yes	
+		}
+		/* 
+		static void print4() {
+			// System.out.println(i); // Yes
+			System.out.println(j); // Yes			
+		}
+		*/
+	}
+	
+	// static inner class
+	static class SIC {	
+		void print5() {
+			// System.out.println(i); // Yes
+			System.out.println(j); // Yes			
+		}
+		static void print6() {
+			// System.out.println(i); // Yes
+			System.out.println(j); // Yes			
+		}
+	}
+} // end of OC
+
+Points about how to write inner class:
+--------------------------------------
+1) in outer class we can write both static and non-static inner classes 
+
+ii) In non-static inner class we can write only non-static method, but cannot write static method. 
+iii) In that we can access both static and non-static variables of outer class.
+
+iv) In static inner class we can write both non-static and static method. 
+v) In those methods we can access only static variables of outer class.
+
+// OCICClient.java
+class OCICClient {
+
+	public static void main(String rags[]) {
+		// how to access non-static method of outer class?
+		OC oc=new OC();
+		oc.print1();
+		
+		// how to access static method of outer class?
+		OC.print2();
+		
+		// how to access non-static method of non-static inner class?
+		// first of all know how to instantiate non-static inner class?
+		OC.NSIC ocnsic=oc.new NSIC();
+		ocnsic.print3();
+		
+		// how to access non-static method of static inner class?
+		// how to create object of static inner class
+		OC.SIC ocsic=new oc.SIC();
+		ocsic.print5();
+		
+		// how to access static method of static inner class
+		OC.SIC.print6();
+	}
+	
+}
+
+Points about how to access inner class:
+---------------------------------------
+A class can contain both non-static and static inner classes.
+
+Non-static inner class can contain only non-static method
+Static inner class can contain both static and non-static methods
+
+In non-static inner class non-static method we can access both static and non-static variables of outer class
+In static inner class both static and non-static methods we can access only static varaible of outer class
+
+How to create object of non-static inner class?
+OC oc=new OC();
+OC.NSIC ocnsic=oc.new NSIC();
+ocnsic.print3();
+
+How to create object of static inner class?
+OC.SIC ocsic=new OC.SIC();
+ocsic.print5();
+OC.SIC.print6();
+
+								anonymous class/unnamed class
+								=============================
+Wherever interface implementation is having usability only once, in such cases instead of writing a seperate sub class, we can write anonymous class to interface.
+
+Writing class body without class declaration is called as anonymous class. 
+
+Writing class body during class object creation. "Implementing all the methods of interface while instantiating interface". 
+
+If interface contains abstract methods, to interface we will write one or many sub classes. We can instantiate and use sub class anywhere in our system. 
+
+But anonymous class aim is zero re-usability of such classes because at the time of instantiation itself we will implement all the interface methods so that those method implementations are available in only one occasion/ instance. 
+
+If interface implementation do not  want to be reusable, but want to be usable only once then we will implement anonymous class.
+
+Zeroth Anonymous example:
+-------------------------
+interface Intf1 {
+	v m1();
+	v m2();
+}
+
+											class Intf1Impl implements Intf1 {
+												p v m1() {}
+												p v m2() {}
+											}
+
+											Intf1Impl ii=new Intf1Impl();
+											i1.m1();
+											i1.m2();	
+
+class Intf1ACExample {
+
+	public static void main(String rags[]) {
+		// we are not writing sub class to interface
+		// we are instantiating interface
+		// in the interface instantiation body, implement all interface methods in that body
+		// such a interface instantiation body is called as anonymous class
+		Intf1 i1=new Intf1() {
+			public void m1() {}
+			public void m2() {}
+		};
+		
+		i1.m1();
+		i1.m2();
+	}
+} 
+
+First Anonymous example:
+------------------------
+// AnonymousInterface.java
+interface AnonymousInterface {
+   void method1();
+   void method2();
+}
+
+// STDOUTPrinterClass.java
+public class STDOUTPrinterClass implements AnonymousInterface {
+    public void method1() {
+	   System.out.println("method1 is printing on STDOUT");
+	}
+    public void method2() {
+	   System.out.println("method2 is printing on STDOUT");
+	}
+}
+
+// FilePrinterClass.java
+public class FilePrinterClass implements AnonymousInterface {
+    public void method1() {
+	   System.out.println("method1 is printing on File");
+	}
+    public void method2() {
+	   System.out.println("method2 is printing on File");
+	}
+}
+
+// AnonymousInterfaceUsedClass.java
+public class AnonymousInterfaceUsedClass {
+   public void printMessage(AnonymousInterface ai) {
+       ai.method1();
+       ai.method2();
+   }
+}
+
+// AnonymousInterfaceClient1.java
+public class AnonymousInterfaceClient1 {
+
+   public static void main(String rags[]) {
+       // STDOUTPrinterClass spc=new STDOUTPrinterClass();
+       FilePrinterClass spc=new FilePrinterClass();
+	   AnonymousInterfaceUsedClass aiuc=new AnonymousInterfaceUsedClass();
+	   aiuc.printMessage(spc);
+   }
+}
+ 
+// AnonymousInterfaceClient2.java
+public class AnonymousInterfaceClient2 {
+
+   public static void main(String rags[]) {
+       // STDOUTPrinterClass spc=new STDOUTPrinterClass();
+       // FilePrinterClass spc=new FilePrinterClass();
+   	   // AnonymousInterfaceUsedClass aiuc=new AnonymousInterfaceUsedClass();
+	   // aiuc.printMessage(spc);
+
+	   // instead of instantiating interface sub classes and pass that object as argument into printMessage() method of AnonymousInterfaceUsedClass. We will directly instantiate interface in printMessage() method and implement both the interface methods in instantiation body.
+	   
+   	   AnonymousInterfaceUsedClass aiuc=new AnonymousInterfaceUsedClass();
+	   aiuc.printMessage(new AnonymousInterface() {
+	      public void method1() {
+		     System.out.println("method1 is printing output from anonymous class/interface object creation body");
+		  }
+	      public void method2() {
+		     System.out.println("method2 is printing output from anonymous class/interface object creation body");
+		  }
+	   });
+   }
+   
+}
+
+/*
+anonymous class:
+new AnonymousInterface() {
+	      void method1() {
+		     System.out.println("method1 is printing output from anonymous class/interface object creation body");
+		  }
+	      void method2() {
+		     System.out.println("method2 is printing output from anonymous class/interface object creation body");
+		  }
+}
+
+		or
+		
+AnonymousInterface ai=new AnonymousInterface() {
+	      void method1() {
+		     System.out.println("method1 is printing output from anonymous class/interface object creation body");
+		  }
+	      void method2() {
+		     System.out.println("method2 is printing output from anonymous class/interface object creation body");
+		  }
+};
+
+AnonymousInterfaceUsedClass aiuc=new AnonymousInterfaceUsedClass();
+aiuc.printMessage(ai);	
+*/ 
+ 
+ Wherever re-usability is not required there we will implement and use anonymous class. Anonymous class can be passed only as argument into method. It cannot be written or saved anywhere outside and reused.
+
+ Inner class and Anonymous class are together called as Nested Classes.
+
+Second anonymous class example:
+-------------------------------
+public interface ActionListener {
+	public void actionPerformed(ActionEvent ae);
+}
+
+public class AddActionListener implements ActionListener {
+	public void actionPerformed(ActionEvent ae) {
+		add two operands
+	}
+}
+
+public class SubActionListener implements ActionListener {
+	public void actionPerformed(ActionEvent ae) {
+		sub two operands
+	}
+}
+
+public class CalcFrame extends Frame {
+	int firstOperand;
+	int secondOperand;
+	int result;
+	
+	Button zeroB, firstB,..........;
+	Button addB, subB, mulB;
+	
+	public CalcFrame() {
+		create button objects
+		add them to layout
+		
+		// adding event hander classes to buttons
+		// addB.addActionListener(new AddActionListener());
+		// subB.addActionListener(new SubActionListener()); 
+
+		addB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				result=firstOperand + secondOperand;
+			}
+		});
+		
+		subB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				result=firstOperand - secondOperand;
+			}
+		});
+		
+	}	
+}	
+
+										Enum
+										====
+Enumeration purpose is to declare constants of various datatypes. For example to declare directions, colors, priority, risk levels etc
+
+// Direction.java
+enum Direction {
+	NORTH, EAST, SOUTH, WEST, NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST;
+}
+
+// Color.java
+enum Color {
+	RED,GREEN,BLUE,WHITE,YELLOW,ORANGE,BLACK;
+}
+
+// Priority.java
+enum Priority {
+	HIGH, MEDIUM, LOW;
+}
+
+A simple enum example where enum is declared outside any class (Note enum keyword instead of class keyword) 
+
+enum Color { 
+    RED, GREEN, BLUE; 
+} 
+  
+public class Test { 
+
+// Driver method 
+public static void main(String[] args) { 
+	Color c1 = Color.RED;  // each enum constant variable is treated as one instance of enum
+	System.out.println(c1);
+} 
+}
+
+
+								Polymorphism (Many shapes of method)
+								====================================
+One method with different signatures - method overloading - takes place in the same class.
+
+One method with one signature having many implementations - method overriding - takes place between one super class and many sub classes.
+
+Method overloading and Method overriding comes under polymorphism also called as static and dynamic polymorphism.
+ 
+	+ Method overloading is static polymorphism.
+	+ Method overriding is dynamic polymorphism.
+ 
+	Method overloading:
+		Writing same method many times with different method signature is called as overloading. Overloading considers number of parameters, type of parameters and order of parameters.
+		Overloading takes place within the class.
+
+// OverloadingDemo.java
+public class OverloadingDemo {
+ 
+    public double calTax(double amt) {
+	   double taxOnAmt=0.0;
+	   taxOnAmt=amt*12.5/100;
+	   return taxOnAmt;
+	}
+	
+    public double calTax(double amt, String state) {
+	   double taxOnAmt=0.0;
+	   if(state.equals("AP") {
+	      taxOnAmt=amt*12.5/100;
+	      return taxOnAmt;
+	   } else if(state.equals("UP")) {
+	      taxOnAmt=amt*11.5/100;
+	      return taxOnAmt;
+	   } else {
+	      taxOnAmt=amt*10.5/100;
+	      return taxOnAmt;
+	   }
+	}
+
+/*
+	public int add2Int(int i, int j) {}
+	public int addThreeInt(int i, int j, int k) {}
+	public int add_Four_Int(int i, int j, int k, int l) {}
+	public int add_5_Int(int i, int j, int k, int l, int m) {}
+*/
+
+	public int add(int i, int j) {}
+	public int add(int i, int j, int k) {}
+	public int add(int i, int j, int k, int l) {}
+	public int add(int i, int j, int k, int l, int m) {}
+
+	public int add(float i, float  j) {}
+	public int add(float i, float j, float k) {}
+	public int add(float i, float j, float k, float l) {}
+	public int add(float i, float j, float k, float l, float m) {}
+	
+	/*
+	int arr[]={1,2,3,4,5,6,7,8,9,10};
+	add(arr);
+	*/
+	public int add(int i[]) {
+		int sum=0;
+		int len=i.length;
+		for(int a=0;a<len;a++) {
+			sum=sum+i[a];
+		}
+		return sum;
+	}
+
+	// var-args => variable arguments
+	// add(1,2,3,4,5,6,7,8,9)
+	public int add(int... i) {
+		int sum=0;
+		// for-each loop
+		for(int a:i) {
+			sum+=a;
+		}
+		return sum;
+	}
+	
+	public int add(String str, int... i) { // correct syntax
+		int sum=0;
+		// enhanced for loop
+		for(int j:i) {
+			sum+=j;
+		}
+		return j;
+	}
+	
+	public int add(int i..., String str) { // wrong syntax
+	   int sum=0;
+	   // enhanced for loop
+	   for(int j:i) {
+		   sum+=j;
+	   }
+	   return j;
+	}
+
+	public int add(String str, int i[]) { // correct syntax
+	  int len=i.length;
+	  int sum=0;
+	  for(int j=0;j<len;j++) {
+		 // sum=sum+i[j];
+		 sum+=j;
+	  }
+	  return sum;
+	}
+	
+	public int add(int[] i, String str) { // correct syntax
+	  int len=i.length;
+	  int sum=0;
+	  for(int j=0;j<len;j++) {
+		 // sum=sum+i[j];
+		 sum+=j;
+	  }
+	  return sum;
+	}
+
+}
+
+ If method overloading doesn't exist we need to write the same method with different names for different signatures.
+ 
+ In contrast with the above example if we want to add two ints, three ints and so on, to add 20 or 30 ints we need to overload add() method for those many times which is not a practical solution. The solution is given in JDK 1.6 as var args (variable arguments). In var args in the method the parameters must be written as:
+ 
+	public int add(int[] i) { // int array, correct syntax
+	}
+	public int add(int i[]) { // int array, correct syntax
+	}
+	public int add(int... i) { // int var-args, correct syntax
+	}
+	public int add(int i...) { // wrong syntax
+	}
+ 
+If different parameters are passed into method along with vararg parameter, vararg parameter should be the last parameter, after vararg parameter no other parameter should not be passed.
+
+	public int add(String str, int... i) { // correct syntax
+	   int sum=0;
+	   // enhanced for loop
+	   for(int j:i) {
+		   sum+=j;
+	   }
+	   return j;
+	}
+	
+	public int add(int i..., String str) { // wrong syntax
+	   int sum=0;
+	   // enhanced for loop
+	   for(int j:i) {
+		   sum+=j;
+	   }
+	   return j;
+	}
+
+	public int add(String str, int i[]) { // correct syntax
+	  int len=i.length;
+	  int sum=0;
+	  for(int j=0;j<len;j++) {
+		 // sum=sum+i[j];
+		 sum+=j;
+	  }
+	  return sum;
+	}
+	
+	public int add(int i[], String str) { // correct syntax
+	  int len=i.length;
+	  int sum=0;
+	  for(int j=0;j<len;j++) {
+		 // sum=sum+i[j];
+		 sum+=j;
+	  }
+	  return sum;
+	}
+
+Note: In a java program main() method can be overloaded, but there is no concept of overriding main() method. main() method must be written with String[] as parameter or String... rags
+
+
+									Message Passing
+									===============
+- Pass-by-value
+- Pass-by-reference
+
+Pass-by-value
+-------------
+Primitive members (int, long, float, double, char, boolean) passed as arguments into method are called as pass-by-value. In pass-by-value the value of the variable is copied into method argument, so that even though the parameter value changes in the methods the /argument or value doesn't reflect in the original copy.
+
+// PBV.java
+class PBV {
+
+	public static void main(String rags[]) {
+		int age=18;
+		double sal=50000.00;
+		char ch='A';
+		boolean yesorno=true;
+		
+		System.out.println("Before pbv "+age+" "+salary+" "+ch+" "+yesorno);
+		// pass-by-value
+		modify(age, sal, ch, yesorno);
+		System.out.println("After pbv "+age+" "+salary+" "+ch+" "+yesorno);
+	}
+	
+	public static void modify(int i, double d, char c, boolean b) {
+		i+=10;
+		d+=10000.00;
+		c='B';
+		b=false;
+		System.out.println("In modify "+i+" "+d+" "+c+" "+b);
+	}
+}
+
+Pass-by-reference
+-----------------------
+Arrays and all objects except String passed as arguments into method are called as pass-by-reference. In pass-by-reference the address of the object is passed into method, so that if any changes made to object in the method will be modified in the origin object also.
+
+class Emp {
+   int eid;
+   String ename;
+   double sal;
+   String desig;
+   
+   Emp() {}
+   Emp(int id, String en, double sa, String de) {
+      eid=id;
+	  ename=en;
+	  sal=sa;
+	  desig=de;
+   }
+
+   public String toString() {
+      return eid+" "+ename+" "+sal+" "+desig;
+   }
+}
+ 
+// PassByReference.java
+public class PassByReference {
+    public static void main(String rags[]) {
+	
+		double d[]={10.24, 20.45, 30.65};
+	    Emp e=new Emp(1, "ABC", 100000.00, "Architect");
+		
+		passByReference(d, e);
+		
+		for(double d1:d) {
+	       System.out.println(d1); // 40.89, 20.45, 30.65
+		}
+		
+		System.out.println(e); // 1 Mr. ABC 200000.00 Architect
+	}
+	
+	public static void passByReference(double d[], Emp e) {
+	   d[0]=40.89;
+	   e.ename="Mr. "+e.ename;
+	   e.sal=e.sal+e.sal;
+	}
+}
+ 
+Access specifiers that can be applied on:
+class: default, public
+var: all 4
+constr: all 4
+method: all 4
+
+Access modifiers that can be applied on:
+class: abstract, final
+var: static, final, volatile, transient
+constr: No access modifier
+method: abstract, final, static, native, synchronized
+
+super & this keywords
+---------------------
+When a variable is declared with the same name in super class in sub class, then in order to eliminate variable ambiguity we use super and this keywords.
+
+class A {
+   int i=10;
+}
+
+class B extends A {
+   int i=20;
+   
+   public void print() {
+     int i=30;
+	 System.out.println(super.i); // super class instance var
+	 System.out.println(this.i); // current class instance var
+	 System.out.println(i); // local var
+   }
+   
+   public static void main(String rags[]) {
+       B b=new B();
+	   b.print();
+   }
+}
+
+this keyword is used to access "current class" class instance with that we can access both class instance variable and well as methods (non static variables and methods)
+
+super keyword is used to access "super class" class instance with that we can access both class instance variable and well as methods (non static variables and methods)
+
+static variables can be accessible using both class.varname, objref.varname, this.varname.
+
+this and super keywords cannot be used in static methods because they will have only one copy of memory from which they cannot access instance variable ) instance variables memory allocated for every instance of the class.
+
+From the sub class if super class constructor want to be called then super() is called. From the same class, another constructor of the same class want to be called then we will use this().
+
+class C {
+  int i,j;
+  C() {
+     System.out.println("C() called");
+  }
+  C(int i, int j) {
+     System.out.println("C(i,j) called");
+	 this.i=i; // constructor parameter i is assigned to i class instance variable
+	 this.j=j; 
+  }
+}
+
+class D extends C {
+  int k,l;
+  D() {
+     System.out.println("D() called");
+  }
+  D(int k, int l) {
+     System.out.println("D(k, l) called");
+	 super(k, l);
+  }
+  D(int i, int j, int k, int l) {
+     super(i, j);
+	 this.k=k;
+	 this.l=l;
+  }
+}
+
+class E {
+   public static void main(String rags[]) {
+      D d=new D(1,2,3,4);
+	  System.out.println(d.i);
+	  System.out.println(d.j);
+	  System.out.println(d.k);
+	  System.out.println(d.l);
+
+   }
+}
+
+Note: While calling super class constructor from sub class, super class constructor calling must be the first statement. Before super() we should write even a single System.out.println() statement also.

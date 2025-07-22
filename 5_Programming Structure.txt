@@ -1,0 +1,1089 @@
+Structure of writing java program:
+==================================
+9 parts of Java program:
+------------------------
+1) Comments (optional)
+2) package declaration (o)
+3) import statements (o)
+
+4) class declaration (c)
+5) variable declaration (o)
+6) constructor implementation (o)
+7) method implementation (c)
+
+8) static blocks (o)
+9) non-static blocks (o)
+
+Comments:
+---------
+Java supports 3 types of comments
+i) Single line comment 
+Ex: // 
+- To write class name as a file name
+- In informal documentation to describe about following classname, variable name, constructor, method etc
+- inside method to comment single lines such as var declaration, var initialization, object creation, method calling and return statements
+
+ii) Multi line comment
+- we will use multi line comment to comment a block of code in the method such as conditions, loops, exception handling
+- old method implementations`
+/*
+  we can write
+	multiple lines of comment
+  on below method (or) we can put unused logic in multi line comment
+*/
+  
+  for( int i=0; i<20; i++) {
+    /*
+	if(i%2==0) {
+	     System.out.println("This is even number");
+	  } else {
+	     System.out.println("This is odd number");
+	  }
+	*/
+	var _oddOr$even=(i%2==0)?"This is even number":"This is odd number";
+  }
+
+iii) Java Documentation comment
+
+/**
+* Author: Surya
+* Date: 18-03-2014
+* Comment: The following method adds two integer variables and return integer.
+* @param i is integer
+* @param j is integer
+* @return: integer
+* @exception This method parameters must be non-negetive or non-zero values, otherwise IllegalArgumentException is thrown
+*/
+public int add(int i, int j) throws IllegalArgumentException {
+	if(i<=0 && j<=0) {
+		throw new IllegalArgumentException();
+	}
+	return i+j;
+}
+
+
+The following command generates api documentation of our current directory classes.
+javadoc -d . *.java
+
+
+
+Package and import statements
+------------------------------
+package name is a logical name to physically existing directory.
+
+Classes written in one directory if want to be used other directories. Then every class in a directory must have package declaration. Class should be public. Variables, constructors and methods can be declared with desired scope. Such classes can be imported anywhere in the system.
+
+package declaration is meant/mandatory if any user defined java class want to be resuable within and outside the directory (throught out the system). Along with package declaration the class also must be declared as public.
+
+Current directory is
+
+C:\ActiveNET Material\CoreJava\am3\am3\javalang\structure
+// A.java
+package am3.am3.javalang.structure;
+public class A {
+
+	private int a; // private access specifier variable 
+	int b;  // default access specifier variable
+	protected int c;  // protected access specifier variable
+	public int d;  // public access specifier variable
+	
+	public void print() {
+		System.out.println(a); // Y
+		System.out.println(b); // Y
+		System.out.println(c); // Y
+		System.out.println(d); // Y
+	}
+}
+
+After declaring package declaration and class as public, the package parent directory must be updated in CLASSPATH. Otherwise package and class cannot be imported in other directories.
+
+CLASSPATH=%CLASSPATH%;C:\ActiveNET Material\CoreJava\
+
+import am3.am3.javalang.structure.A;
+
+I will one write sub class of class A within the same package.
+
+C:\ActiveNET Material\CoreJava\am3\am3\javalang\structure
+// B.java
+package am3.am3.javalang.structure;
+public class B extends A {
+	public void print() {
+		System.out.println(a); // N
+		System.out.println(b); // Y
+		System.out.println(c); // Y
+		System.out.println(d); // Y
+	}
+}
+
+I will write one more class in which i will instantiate class A and access its variables.
+
+C:\ActiveNET Material\CoreJava\am3\am3\javalang\structure
+// C.java
+package am3.am3.javalang.structure;
+public class C {
+	public void print() {
+		A a=new A();
+		System.out.println(a.a); // N
+		System.out.println(a.b); // Y
+		System.out.println(a.c); // Y
+		System.out.println(a.d); // Y
+	}
+}
+
+/* D.java within the same directory, but no package declaration tries to access class A variables.
+*/
+public class D {
+  public void print(){
+    A a=new A();
+    System.out.println(a.a);// na
+    System.out.println(a.b);// na
+    System.out.println(a.c);// na
+    System.out.println(a.d);// a
+  }    
+}
+
+// E:\active\core\am3\javalang\first\
+/* 
+	E.java sub class of class A outside the package
+*/
+
+import am3.am3.javalang.structure.A;
+public class E extends A {
+
+  public void print(){
+    System.out.println(a);// na
+    System.out.println(b);// na
+    System.out.println(c);// a
+    System.out.println(d);// a
+  }
+  
+}
+
+
+/* 
+	F.java instantiated class outside the package
+*/
+
+import am3.am3.javalang.structure.A;
+public class F {
+  public void print(){
+    A a=new A();
+    System.out.println(a.a);// na
+    System.out.println(a.b);// na
+    System.out.println(a.c);// na
+    System.out.println(a.d);// a
+  }   
+}
+
+Access specifiers and their scopes:
+-----------------------------------
+Variable declared as private can be accessible only within the class.
+
+default access specifier member can be accessible in both sub class and instantiated class within the package.
+
+protected member variable can be accessible anywhere within the package and only upto sub class outside the package.
+
+public member variables can be accessible in both sub classes and instantiated within and outside the package.
+
+Note: package declaration:
+--------------------------
+class containing directory or its parent.sub dir can be declared as package. But whichever directory is declared as package, the classpath must be setuped upto its parent directory.
+
+once package parent directory is updated in classpath we can import package and its classes accessible anywhere in other folders. The recommendation is while importing package class must be imported with fully qualified name (packagename.classname)
+
+********************************************************
+VVImp:												   *
+********************************************************
+Why public class name and File name must be named same?*
+********************************************************
+Why a single .java file can have only one public class?
+If multiple public classes are allowed in a single .java extension file (compiler wont accept) such as in A.java - class A,B,C are public.
+
+For three .class files only one single A.java file exist in our directory. In future if one more B.java extension file want to be saved in the same directory the file saving is allowed. When B.java file is compiled B.class produces. If that class is a default access specifier class, default access specifiered .class will come and override .class file of public class. 
+
+Hence every public class must be saved in .java extension file with the same name as class name.
+
+// Class1.java
+public class Class1 {
+
+}
+public class Class2 {
+
+}
+public class Class3 {
+
+}
+
+javac Class1.java
+Compiler say public class B should be placed in B.java, public class C should be placed in C.java
+
+
+List of access specifiers and modifiers:
+========================================
+access_specifiers:
+------------------
+private (v,co,m)
+default (c,v,co,m)
+protected (v,co,m)
+public (c,v,co,m)
+
+access_modifiers:
+-----------------
+abstract (c,m)
+final (c,v,m)
+static (v,m)
+
+transient (v)
+volatile (v)
+
+native (m)
+synchronized (m)
+
+Applicability of access specifiers and modifiers on class, variable, constructor and method:
+============================================================================================
+class as,am:
+------------
+as: default, public		class Hello {}		public class Hai {}
+am: abstract, final		abstract class A {}		final class B {}
+
+var as,am:
+----------
+as: private, default, protected, public
+am: final, static, transient, volatile
+
+constructor as,am:
+------------------
+as: private, default, protected, public
+am: no modifiers
+
+method as,am:
+-------------
+as: private, default, protected, public
+am: abstract, final, static, native, sychnoronized
+
+
+Syntax of declaring class, variable, constructor and method:
+============================================================
+-------------------------
+Class declaration syntax:
+-------------------------
+syntax:
+-------
+<access_specifier> <access_modifier> class ClassName <extends SuperClass> <implements SuperInterface1, SuperInterface1> {
+}
+
+Examples
+class A {}
+abstract class A {
+}
+public final class A extends ABC implements XYZ, MNO {
+}
+
+
+class Hello extends Hai implements A, B, C { }
+
+access_specifier:
+-----------------
+private (NA): class members such as v, co, m are declared as private and they cannot be accessible outside of the class. But there is meaning in declaring class itself as private.
+
+default (A): default access specifier classes can be used only within the dir though package is declared.
+	package pack1;
+	class A { }
+	
+	public class B { }
+
+protected (NA): members can be accessible upto sub classes outside the package. But class cannot be declared as protected.
+
+public (A): can be accessible anywhere in the system. If want to be accessible then package declaration and classpath up-to package parent directory updation is must.
+
+access_modifier:
+----------------
+abstract: abstract means unclear or not fully implemented. If class contains abstract method(s) - unimplemented methods - only methods declared, then it must be declared as abstract. But it is not mandatory that abstract class must contain abstract methods. Classes which donot want to be instantiated are also declared as abstract. abstract class methods are implemented in sub classes. abstract class cannot be instantiated, but can only be inherited.
+
+final: final is quite oppose to abstract. final class can be instantiated but cannot be inherited. That means no sub class hierarchy exist for this class.
+
+Note: a class cannot be declared as both abstract and final at a time.
+
+Ex:
+public abstract class AbstractClass { }
+public final class FinalClass { }
+
+How to declare class as abstract?
+	abstract class AbstractClass { }
+
+When to declare class as abstract?
+		If class contains abstract method then declare class as abstract. abstract method means unimplemented method. Just only declared method.
+
+abstract class & method example:
+--------------------------------		
+	// Before abstraction
+	class EmpPayroll {
+		double calSal(int eid) {
+			return now*pds;
+		}
+	}
+	
+	class EPClient {
+		p s v m() {
+			EmpPayroll ep=new EmpPayroll();
+			double sal=ep.calSal(eid);
+		}
+	}
+
+	// After abstraction
+	abstract class EmpPayroll {
+		abstract void calSal(int eid);
+	}
+		
+	class AdminEmpPayroll extends EmpPayroll {
+		void calSal(int eid) {
+			now*pds;
+		}
+	}
+	
+	class SalesEmpPayroll extends EmpPayroll {
+		void calSal(int eid) {
+			now*pds+sales_amt*perc;
+		}
+	}
+
+	class ProdEmpPayroll extends EmpPayroll {
+		void calSal(int eid) {
+			now*pds+othrs*amt
+		}
+	}
+	
+	// Wrong
+	Client
+		AdminEmpPayroll aep=new AdminEmpPayroll();
+		aep.calSal(eid);
+		
+		SalesEmpPayroll sep=new SalesEmpPayroll();
+		sep.calSal(eid);
+		
+		ProdEmpPayroll pep=new ProdEmpPayroll();
+		pep.calSal(eid);
+		
+	
+	class EPFactory {
+		static EmpPayroll getEmpPayroll(String empType) {
+			if(empType.equalsIgnoreCase("Admin"))
+				return new AdminEmpPayroll();
+			else if(empType.equalsIgnoreCase("Sales"))
+				return new SalesEmpPayroll();
+			else
+				return new ProdEmpPayroll();
+		}
+	}
+	
+	class EPClient {
+		public static void main(String rags[]) {
+			// sub class object can be assigned to super class reference
+			EmpPayroll ep=EPFactory.getEmpPayroll(rags[0]);
+			ep.calSal(1); // achieve "Run Time Polymorphism"
+		}
+	}
+	
+	java EPClient Admin 1
+				  Admin 2
+				  Admin 3
+				  Sales 4
+				  Sales 5
+				  Sales 6
+				  Prod  7
+				  Prod  8
+				  Prod  9
+		
+		Abstraction benefits to achieve Runtime Polymorphism (RTP).
+				  
+What happens if class is declared as abstract?
+	abstract class cannot be instantiated. It can be only inherited. Inherited sub class must implement all the super class abstract methods.
+
+Is it mandatory that abstract class must contain abstract methods?
+	No need. Without abstract methods also sometimes class will be declared as abstract.
+
+Then without abstract methods why a class need to be declared as abstract?
+	Most generic classes who provide common functionality are declared as abstract class. Such class dont want to be instantiated directly. They allow their methods to be called via sub classes.
+
+final class:
+------------
+	final can be only instantiated, can't be inherited. Class which don't want its methods to be overriden in sub class are declared as final. When there is no inheritance, there is no overriding.
+	
+	Note: In Java all wrapper classes are final.
+		java.lang.String
+		java.lang.Integer
+		java.lang.Double
+		java.lang.Long
+	
+	class NonFinalClass {
+		void m1() {}
+		void m2() {}
+		final void m3() {}
+		final void m4() {}
+	}
+	
+	class NonFinalClassSubClass extends NonFinalClass {
+		// m1() and m2() can be overriden
+		void m1() {}
+		void m2() {}
+		
+		// m3() and m4() cannot be overriden because of final methods
+		/* if overrides so, we will get compilation error saying final methods cannot be overriden */
+		void m3() {}
+	}
+	
+	If NonFinalClass want all its methods don't want to be overriden in sub class, then we are having two solutions:
+	i) declare all 4 methods as final
+		then NonFinalClass can be still inherited, but its methods cannot be overriden
+	ii) instead of declaring methods as final, declare class itself as final
+		then final class cannot be inherited, when there is no inheritance, there is no overriding
+	
+
+----------------------------
+Variable declaration syntax:
+----------------------------
+int i;
+public int i;
+int i=10;
+final int i=10;
+public static final int i=10;
+transient int i=10;
+volatile int i=10;
+
+Syntax:
+<access_specifier> <access_modifier> data_type var_name/identifier <= initializer/value/ literal>;
+
+access_specifier:
+	all a_s are applicable on variables
+	private: accessible only within the class
+	default: accessible only within the package
+	protected: accessible within the package, only upto sub class outside the package
+	public: anywhere (within and outside the package)
+
+
+access_modifiers:
+	abstract: is applicable only on class and methods because only class and method are having body/implementation. variables are just initialized. we should not declare variable as abstract. - Not Applicable
+
+	final: var whose value want to be constant forever are declared as final. final var value must be initialized at the time of declaration. They can't be reinitialized. initialization means assigning value.
+
+						minAgeForVote
+		public final int MIN_AGE_FOR_VOTE = 18;
+	
+	class Emp {
+	
+		int eid; // aka instance/dynamic variables, memory exist in object memory
+		String ename; // instance variable
+		double sal; // instance variable
+		String desig; // instance variable
+		
+		static final int MIN_AGE=18;
+		// memory is allocated in class memory; static variable/class variable
+		
+		static int counter; // aka class variable; memory exist in class memory
+		
+		Emp() {
+			counter=counter+1;
+		}
+		
+		Emp(int eid, String ename, double sal, String desig) {
+			this.eid=eid;
+			this.ename=ename;
+			this.sal=sal;
+			this.desig=desig;
+			counter++;
+		}
+	}
+
+	Emp e1=new Emp(); 
+	System.out.println(Emp.counter); 
+	
+	Emp e2=new Emp(); 
+	System.out.println(e2.counter);
+				.
+				.
+				.
+	Emp e100=new Emp(); 
+	System.out.println(e100.counter);
+	
+static: While declaring vars, vars which are not prefixed with static keyword are called as non static vars/class instance var/dynamic var (eid, ename,sal,desig). To such variables as many objects/instances of a class are created in those many instances the memory will be allocated to variables. The var value changes from instance-instance hence they are called as dynamic variables.
+
+Variable which is prefixed with static is called as static var/class var/not a class instance variable.
+
+Generally final variables are declared as static also because final variables value doesn't change though as many number of instances of the class are created, but in every instance memory, memory will be allocated non-static which unneccessarily consumes the memory. Hence not to consume memory unneccessarily for final variable, the var is also declared as static.
+
+Every static variable may not final such as counter variable incremented in Student class constructor which will tell the count how many number of instances of Student class are created.
+
+If a variable is declared as static in one super class, with the same variable name if one more variable is declared in sub class. static vars are not derived into sub class, they will be directly called using classname.varname. static variables should not be called with this and super keywords. But they can be called with super class or sub class instances.
+
+transient: variable which cannot be serialized
+Vars declared as transient cannot be persistent. Persistent means in a Emp or Student class we will declare vars such sid, sname, email, mobile, course, create object of Student class, initialize its state and can be stored into .ser file or the object can be passed into n/w to other machine. In the process of object serialization except transient variables all other variables are serialized.
+
+volatile: variable which cannot be synchronized
+When a single class instance is used in multiple threads, the object state can be accessed or modified in multiple threads. Hence they are thread-safe. To keep object state in thread-safe we can synchronize threads. During thread synchronization except volatile variables all other vars are in synchronous state. Volatile variables are asynchronous.
+
+native and synchronized cannot be applied on variables, they can be applied only on methods.
+
+------------
+Constructor:
+------------
+Syntax:
+-------
+<access_specifier> ClassNameAsConstructor(<param_type param_name, param_type param_name, ....>) {
+	// class instance variables initialization
+}
+
+Before discussing consequences of applying access specifiers on constructor, we will discuss about default constructor.
+
+default constructor generation for default access specifier class:
+------------------------------------------------------------------
+class A {
+	// if we dont write any constructor
+}
+
+javac A.java during compilation, compiler generates one default constructor
+	  A.class
+		
+class A {
+	A() {} // default constructor; access specifier same as class access specifier with no param constructor
+}
+
+default constructor generation for public access specifier class:
+------------------------------------------------------------------
+package mypack;
+public class B {
+	if no constructor is written, compiler generates one default constructor with the same access specifier as class.
+}
+
+javac B.java
+
+public class B {
+	public B() {}
+}
+
+Note: 
+	default constructors are generated by compilers only if no constructor is present in class.
+	
+access_specifiers:
+	private: 
+		If constructor is declared as private such classes cannot be derived or instantiated. 
+		
+		We can't subclass
+		We can't instantiate / create object
+		
+		A class cannot be instantiated:
+		A a=new A(); // error
+
+		A class cannot be sub classed:
+		class B extends A {
+			B() {
+				super();
+			}
+		}
+
+		Then when class constructors are generated as private?
+		
+			Classes which want to instantiate themself such classes are called as Singleton classes. 
+			
+			Singleton classes will have only one single object per JVM.
+		
+		Singleton class example:
+		------------------------
+		class A {
+			static A a;
+			
+			private A() {
+			}
+			
+			// following factory methods returns A class object
+			static A getInstance() {
+				if(a==null) {
+					a=new A();
+				}
+				return a;		
+			}
+			
+			void xyz() {}
+			void lmn() {}
+			static void pqr() {}
+			static void mno() {}
+		}
+
+		A singleton class object can be obtained:
+		A a=A.getInstance();
+		a.xyz();
+		a.lmn();
+		A.pqr();
+		A.mno();
+
+		Usually singleton classes (class which contains only one instance per JVM) constructors are declared as private.
+
+		Without instantiating and sub classing how a class can be useful?
+		Hence in such classes, the class itself contains its own instance. The instance is created and returned from one more static method of the same class called factory method. Such classes are called as Singleton classes.
+
+		Some of the Singleton classes in java are:
+			ResourceBundle, Runtime, Logger, Toolkit, DocumentBuilderFactory, DocumentBuilder, System and Math.
+
+	default:
+		class which contains default access specifier constructor can be sub classes and instantiated only within the package. It cannot have sub classes or instantiated classes outside the package.
+
+		public class A {
+			A() {
+			}
+		}
+
+		Note: In a class if we don't write constructor by default javac provides one default constructor. The default constructor may be public or default access specifiered with no parameters.
+
+	protected:
+		If class constructor is declared as protected then the class can be sub classes and instantiated both within the package. But outside the package the class can only be sub classes, cannot be instantiated.
+
+		public class A {
+			protected A() {
+			}
+		}
+
+	public:
+		constructor containing public access specifier can have sub class or instantiated class within and outside the package.
+
+	access modifiers:
+		Constructor don't accept any access modifiers.
+
+	Example on constructors:
+	------------------------
+	public class Emp {
+	  int eid;
+	  String ename;
+	  double sal;
+	  String desig;
+	  double grossSalary;
+	  double netSalary;
+	  
+	  // public no param constructor
+	  public Emp() {
+		super(); // implicit statement
+	  }
+	  
+	  // single parameter constructor
+	  // with pk property as a parameter
+	  public Emp(int eid) {
+		super(); // implicit statement
+		this.eid=eid;
+	  }
+	  
+	  // two parameters constructor
+	  // with required/essential variables as a parameters
+	  public Emp(String ename, String desig) {
+		super(); // implicit statement
+		this.ename=ename;
+		this.desig=desig;
+	  }
+
+	  // public paramater constructor
+	  // with all class instance variables passed as parameters
+	  public Emp(int eid, String en, double sal, String desig) {
+		super(); // implicit statement
+		this.eid=eid;
+		ename=en;
+		this.sal=sal;
+		this.desig=desig;
+	  }
+	}
+
+	class EmpClient {
+	  public static void main(String rags[]) {
+		Emp e1=new Emp();
+		Emp e2=new Emp(1);
+		Emp e3=new Emp("ABC", "Soft Engg");
+		Emp e4=new Emp(1, "ABC", 50000.00, "Soft Engg");
+	  }
+	}
+
+--------------------------
+method declaration syntax:
+--------------------------
+void add() {
+}
+
+public abstract double divide(int i, int j) throws ArithemticException;
+
+public final int add(int a, int b) {
+	return a + b;
+}
+
+<access_specifier> <access_modifier> return_type method_name(<paramtype1 paramname1, paramtype2 paraname2>) <throws ExceptionsList> {
+
+}
+
+access specifiers:
+------------------
+private: private methods can be accessible only within the class
+
+default: default methods can be accessible only within the package
+
+protected: protected methods can be accessible upto sub class outside the package. Sub class outside the package when overriding super class method, same access specifier can be maintained or access scope can be increased, but scope should not be reduced. For example protected method can be overriden as protected/public but not default/private. If do so compilation error comes saying "Weaker Access Specifier Error".
+
+public: public methods can be accessible anywhere.
+
+ 
+package b;
+class B extends A {
+	protected void a() {}
+}
+
+package b;
+class C extends B {
+	public void a() {}
+}
+
+package b;
+class D {
+	B b=new B();
+	b.a();
+}
+
+package c;
+class E extends A {
+	public void a() {}
+}
+
+package c;
+classs F  {
+	B b=new B();
+	b.a(); // error
+	E e=new E();
+	e.a();
+}
+
+
+access modifiers:
+-----------------
+abstract:
+	* method which is declared but not implemented is declared as abstract
+	* no method implementation/no flower braces exist for abstract method
+	* class which contains abstract method must also be declared as abstract
+	* But abstract class need not contain abstract methods
+	* Abstract methods must be implemented in sub classes
+	* Abstraction importance is to achieve runtime polymorphism
+
+final:
+	methods which don't want to be overridden in sub classes are declared as final.
+
+If all the methods of a class want to be declared as final, instead of declaring all the methods as final, declare class itself as final. When there is no inheritance there is no overriding.
+
+For better memory optimization it is recommended to declare final methods as static also.
+But not all static methods are final.
+
+static:
+static methods will have only one copy of memory. non-static methods will have instance methods. static methods are called as class methods. non-static methods are called as class instance methods.
+
+native: 
+synchronized: Threads
+
+Example on abstract class with abstract method:
+-----------------------------------------------
+// EmpPayroll.java
+public class EmpPayroll {
+  public void calSal();
+}
+
+// AdminEmpPayroll.java
+public class AdminEmpPayroll extends EmpPayroll {
+  public void calSal() {
+    System.out.println("Admin Emp Payroll is : now*pds");
+  }
+}
+
+// SalesEmpPayroll.java
+public class SalesEmpPayroll extends EmpPayroll {
+  public void calSal() {
+    System.out.println("Sales Emp Payroll is : (now*pds)+(salesamt*perc)");
+  }
+}
+
+// ProdEmpPayroll.java
+public class ProdEmpPayroll extends EmpPayroll {
+  public void calSal() {
+    System.out.println("Prod Emp Payroll is : (now*pds)+(overtimehours*othamt)");
+  }
+}
+
+// EPFactory.java
+public class EPFactory {
+  public static EmpPayroll getEmpPayroll(String type) {
+    if(type.equalsIgnoreCase("admin"))
+	  return new AdminEmpPayroll();
+    else if(type.equalsIgnoreCase("sales"))
+	  return new SalesEmpPayroll();
+    else
+	  return new ProdEmpPayroll();
+  }
+}
+
+// EPClient.java
+public class EPClient {
+  public static void main(String rags[]) {
+    EmpPayroll ep=EPFactory.getEmpPayroll(rags[0]);
+	
+	ep.calSal();
+  }
+}
+
+Abstraction main benefit is to loosely couple client with the various versions of method implementation they want to invoke. Runtime binding / Runtime Polymorphism.
+
+In the above client program the client holding EmpPayroll class ref may be assigned/initialized with any one of the sub class of EmpPayroll class at runtime. Based on the runtime argument passed into factory method getEmpPayroll() of EPFactory one of the EmpPayroll class object will be created and returned.
+
+// FinalSuperClass.java
+public class FinalSuperClass {
+  // final int MAX_AGE;
+  // final static int MAX_AGE=18;
+  final static int MAX_AGE;
+  /* variable MAX_AGE might not have been initialized */
+  public FinalSuperClass() {
+    // MAX_AGE=21;
+  }
+  static {
+    MAX_AGE=21;
+  }
+}
+
+// FinalSuperClass.java
+public class FinalSuperClass {
+  // 1st way
+  final int MAX_AGE=18;
+  /* variable MAX_AGE might not have been initialized */
+  public FinalSuperClass() {
+    // MAX_AGE=21; // cannot reinitialize
+  }
+  
+  // 2nd way
+  final int MAX_AGE;
+  public FinalSuperClass() {
+    MAX_AGE=21;
+  }
+
+}
+
+// FinalSuperClassSubClass.java
+public class FinalSuperClassSubClass extends FinalSuperClass {
+  public FinalSuperClassSubClass() {
+    MAX_AGE=23;//NA
+  }
+}
+
+In how many ways we can call static variable of a class.
+// StaticVaraibleTester.java
+public class StaticVaraibleTester {
+
+  static double MAX_AMT=10000.00;
+  double depositAmt;
+  
+  public static void aStaticMethod() {
+	  System.out.println(MAX_AMT); // A
+	  // System.out.println(depositAmt); // NA
+		
+	  System.out.println(FinalSuperClass.MAX_AGE); 
+	  System.out.println(new FinalSuperClass().MAX_AGE); 
+
+	  System.out.println(FinalSuperClassSubClass.MAX_AGE); 
+	  System.out.println(new FinalSuperClassSubClass().MAX_AGE); 
+  }
+  
+  public void aNonStaticMethod() {
+	  System.out.println(FinalSuperClass.MAX_AGE); 
+	  System.out.println(new FinalSuperClass().MAX_AGE); 
+
+	  System.out.println(FinalSuperClassSubClass.MAX_AGE); 
+	  System.out.println(new FinalSuperClassSubClass().MAX_AGE);     
+  }
+}
+
+Note: 
+final variables must be initialized at the time of declaration. 
+
+They can also be initialized constructor.
+
+But cannot reinitialized in the same class methods are sub class constructors and methods.
+
+If variable is declared as static and final then it can be initialized at the time of declaration or can be initialized in the static blocks, but not in the static methods.
+
+If variable is static alone then it can be initialized in initialized during declaration, static blocks and can be reinitialized any number of times static methods.
+
+static variables can be accessed used super class name, sub class name, super class object reference and sub class object reference.
+
+/*
+ChromeOptions options=new ChromeOptions();
+IWebDriver driver=new ChromeDriver(options);
+var browser=new InteractiveBrowser(driver);
+browser.
+*/
+
+Example on static and non-static blocks:
+========================================
+class A {
+	A() {}
+	v m1() {}
+	p s v main(String rags[]) {}
+	static {
+	}
+	{
+	}
+}
+
+A a;
+
+static block:
+-------------
+static blocks will be executed at the time of class loading.
+
+non-static blocks are also called as constructor blocks which will execute before constructor execution. constructor is used while creating object of the class.
+
+class E {
+  static {
+    System.out.println("first static block of E");
+  }
+  
+  E() {
+  }
+  
+  static {
+    System.out.println("second static block of E");
+  }
+}
+
+class F {
+  E e;
+  public static void main(String rags[]) {
+   E e=new E();
+  }
+}
+
+// StaticExample.java
+public class StaticExample {
+
+  static {
+    System.out.println("This is first static block");
+  }
+  
+  public StaticExample() {
+    System.out.println("This is StaticExample class constructor");
+  }
+  
+  public static String staticString="Static variable";
+  
+  static {
+    System.out.println("This is second static block "+staticString);
+  }
+  
+  public static void main(String rags[])  {
+    StaticExample se=new  StaticExample();
+	StaticExample.staticMethod2();
+  }
+  
+  static {		
+     staticMethod1();	
+	 System.out.println("This is third static block");	
+  }
+  
+  public static void staticMethod1() {  
+	 System.out.println("This is staticMethod1()");	
+  }
+  
+  public static void staticMethod2() {  
+	 System.out.println("This is staticMethod2()");	
+  }
+}
+
+This is first static block
+This is second static block Static Variable
+This is staticMethod1()
+This is third static block
+This is StaticExample class constructor
+This is staticMethod2()
+
+
+********************************************************************************************************************
+
+Note: static blocks are mainly used to load native libraries into java program. Native libraries files contains functions implemented in C++/VC++. We can connect them through native methods declared in Java class.
+
+Questions:
+----------
+At what level non-static/instance variables are declared, initialized and used?
+declared at class level, initialized at constructor level and used in non-static methods.
+
+At what level static/class variables are declared, initialized and used?
+declared at class level, initialized at static block level and used in both static and non-static methods.
+
+class NativeDemo {
+	native void printOnPrinter(String message);
+	
+	// native method implementation exist in .dll file
+	static {
+		System.loadLibrary("HPDeskJet1020.dll");
+	}
+}
+
+class NativeDemoClient {
+	p s v main(String rags[]) {
+		NativeDemo nd=new NativeDemo();
+		nd.printOnPrinter("Hello Ram");
+	}
+}
+
+********************************************************************************************
+
+Non-static blocks:
+------------------
+Non-static blocks are also called as Constructor blocks. 
+
+
+// ConstructorBlockExample.java
+public class ConstructorBlockExample {
+
+   // non-static blocks / constructor blocks are open and closed with flower braces without static keyword.
+
+   {
+	 System.out.println("This is first constructor block");
+   }
+
+   public ConstructorBlockExample() {
+	 System.out.println("public no parameter constructor called");
+   }
+   
+   public ConstructorBlockExample(String param1) {
+	 System.out.println("public single String parameter constructor called");
+   }
+
+   public ConstructorBlockExample(String param1, String param2) {
+	 System.out.println("public two String parameter constructor called");
+   }
+   
+   {
+	 System.out.println("This is second constructor block");
+   }
+   
+   public static void main(String rags[]) {
+      ConstructorBlockExample cbe=new ConstructorBlockExample();
+      ConstructorBlockExample cbe=new ConstructorBlockExample("Argument1");
+      ConstructorBlockExample cbe=new ConstructorBlockExample("Argument1", "Argument2");
+   }   
+}
+
+javac ConstructorBlockExample.java
+	During class compilation, compiler will copy all non-static block statements into every constructor before constructor written statements.
+
+java ConstructorBlockExample
+	This is first constructor block
+	This is second constructor block
+	public no parameter constructor called
+	
+	This is first constructor block
+	This is second constructor block
+	public single String parameter constructor called
+	
+	This is first constructor block
+	This is second constructor block
+	public two String parameter constructor called
+
+
+Why constructor blocks? What will be written in constructor blocks?
+Statements which are repeatedly written in every constructor are written in constructor block so that the code will become reusable. The code written in the constructor block is copied into every constructor before constructor written statements during compilation time.
+

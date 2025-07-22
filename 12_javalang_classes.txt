@@ -1,0 +1,735 @@
+java.lang essential classes: 
+----------------------------
+All wrapper classes such as Byte, Short, Integer, Long, Float, Double, Boolean, Character, String, StringBuffer, StringBuilder. Along with these Object, System, Runtime, Class are the remaining important classes.
+
+Object
+------
+java.lang.Object is the root most class to all the java classes in class hierarchy.
+
+Root most class to all Java class including predefined classes and user defined classes. 
+
+If we write a class without extending from any super class, during compilation java compiler by default makes class extends from java.lang.Object.
+
+class Hello {
+	p void sayHello(String name) {
+	}
+}
+
+javac Hello.java
+
+class Hello extends Object {
+	// default constructor
+	Hello() {
+		super();
+	}
+	p void sayHello(String name) {
+		System.out.println(name+" "+name.toLowerCase());
+	}
+}
+
+
+class Hai extends Hello {
+	p v sayHai(String name) {
+	}
+}
+
+javac Hai.java
+
+class Hai extends Hello {
+	Hai() {
+		super();
+	}
+	p v sayHai(String name) {
+		System.out.println(name+" "+name.toLowerCase());
+	}	
+}
+
+class HelloClient {
+	p s v main(String rags[]) {
+		Hello hello=new Hello();
+		hello.sayHello("Surya");
+		Hai hai=new Hai();
+		hai.sayHai("Surya");
+
+		System.out.println(hello instanceof Hello);
+		System.out.println(hello instanceof Object);
+
+		System.out.println(hai instanceof Hai);
+		System.out.println(hai instanceof Hello);
+		System.out.println(hai instanceof Object);
+	}
+}
+
+To bring all Java classes under one hood to all the java classes java.lang.Object acts as super most class. For marking/recognition sake saying class belongs to Java class.
+
+The another reason is Object class provides some common functionalities/methods to all the Java class.
+
+Methods which are commonly required to all the classes exist in this super class. The methods are equals(), hashCode(), toString(), wait(), wait(long ms), wait(long ms, int nanos), notify(), notifyAll(), finalize(), clone() and getClass(). 
+
+All most all sub classes of Object class overrides equals(), hashCode() and toString() methods according to their class instance variables.
+
+For example in String class these 3 methods are implemented on char array.
+
+In Date class these 3 methods are implemented by using date, month, year, hours, minutes, seconds and milliseconds.
+
+If we write user defined class like Emp we will implement equals(), toString(), hashCode() methods using eid, ename, sal and desig variables.
+
+Why equals(), hashCode() and toString()  methods are common to all the java classes because of in java if we want to compare two objects of  the same class then we must implement equals() method but not using == operator. In java == operator is used to compare primitive members. == operator applied on objects will verify their address instead of state.
+
+hashCode() method is not commonly used by the developer but in java collection API, the API internally uses hashCode() method to verify whether two objects are same or not to  prevent duplication because hashCode() based object comparison is always faster than equals() method based comparison. equals() method returns boolean, hashCode() method returns int. 
+
+equals() compares every class instance variable value of LHS object with the same class instance variable value RHS object. As many class instance variables exist those many comparisions happens effects the performance.
+
+toString() method is used to convert all class instance variables together as a single String. Especially when any class object is passed as argument into System.out.println() method the toString() method will be implicitly called on the object. While displaying object state instead of retrieving each variable of the class, invoke toString() method that prints the entire state as a single String.
+
+While implementing equals() methods make sure that the following conditions are satisfied:
+It is reflexive: For any non-null reference value x, x.equals(x) must return true.
+It is symmetric: For any non-null reference values x and y, if x.equals(y) is true then y.equals(x) must also return true
+It is consistent: For any non-null reference values x, y and z, if x.equals(y) is true,  y.equals(z) is true then z.equals(x) must also be true
+For any non-null reference value x, x.equals(null) should return false
+
+For the hashCode() method implementation please refer String class hashCode() method implementation.
+
+ public int hashCode()
+  {
+    int i = this.hash;
+    int j = this.count;
+    if ((i == 0) && (j > 0)) {
+      int k = this.offset;
+      char[] arrayOfChar = this.value;
+
+      for (int m = 0; m < j; m++) {
+        i = 31 * i + arrayOfChar[(k++)];
+      }
+      this.hash = i;
+    }
+    return i;
+  }
+
+hashCode / hashFunction / hashTechnique is a technique which converts variable length String into fixed length integer which mostly used in mathematically operations for quick comparison.
+
+wait(), notify(), notifyAll() methods are used when object is used in thread synchronization.
+
+finalize() method is used to mark the object for garbage collection.
+
+In every OOP language constructor and destructor exist which are used by the developer to create and destroy the object of a class. 
+
+In Java if developer do not provide constructor implementation by default java compiler provides one no parameter constructor but where destructor exist in java class. The destructor is automatic GC (Garbage Collector) only, but that GC calls finalize() method on every object before deleting the object. While implementing java classes developer can initialize class instance variables in constructor and the same variable deinitializations can be performed in finalize() method.
+
+clone() - developer who wish to clone the instance of their classes can override this method. While implementing the method it is developer choice to clone object of a class as deep clone object or shallow clone object. While overridding clone() method developer must also implement class from Cloneable interface to tell that this class can be cloned. Though clone() method is overridden but not implemented from Cloneable interface then the users of our class may not know whether our class can be cloned or not.
+
+Though every java class is a sub class of java.lang.Object. We will explicitly derive from Object and override hashCode(), equals(), toString() and clone() methods.
+
+While developing applications in java we will write types of classes:
+i) Java Beans/POJO/DTO(Data Transfer Object)/VO(ValueObject)/BO(Business Object)/Entity class/Domain Object.
+
+	class Student extends Object implements Serializable, Comparable {
+		int sid;
+		String sname;
+		String email;
+		long mobile;
+		String course;
+		
+		// generate no parameter, parameterized constructors
+		// generate setter & getter methods
+		
+		public int compareTo(Object o) {
+			Student s=(Student)o;
+			// if current object sid is smaller than the eid of passed object, then return -1, if greater return +1, if same return 0. This method is used in classes such as TreeSet, TreeMap which does natural sorting on these class objects.
+			if(this.sid<s.sid) 
+				return -1;
+			else if(this.sid>s.sid)
+				return 1;
+			else
+				return 0;
+		}
+		
+		// override equals(), hashCode(), toString()
+		public boolean equals(Object o) {
+			boolean flag=false;
+			
+			if(o instanceof Student) {
+			
+				Student s1=(Student)o;
+				
+				if(this.sid==s1.sid && this.sname.equals(s1.sname) && this.email.equals(s1.email) && this.mobile==s1.mobile && this.course.equals(s1.course)) {
+					flag=true;
+				}
+			}
+			
+			return flag;
+		}
+		
+		public String toString() {
+			return sid+" "+sname+" "+email+" "+mobile+" "+course;
+		}
+		
+		// convert variable length String into fixed length integer for faster comparision
+		public int hashCode() {
+			return toString().hashCode();
+		}
+		
+		public Object clone() {
+			// deep cloning or shallow cloning
+			
+			// shallow cloning
+			// return this;
+			
+			// deep cloning
+			Student s1=new Student();
+			s1.sid=this.sid;
+			s1.sname=this.sname;
+			s1.email=this.email;
+			s1.mobile=this.mobile;
+			s1.course=this.course;
+			return s1;
+		}		
+	}
+
+	class Emp implements Serializable, Comparable {
+		int eid;
+		String ename;
+		double sal;
+		String desig;
+	}
+	
+	class Course {
+		int cid;
+		String cname;
+		int duration;
+		String content;
+	}
+	
+	class CourseBatch implements Serializable, Comparable {
+		int bid;
+		Course couse;
+		Faculty faculty;
+		// Student students[];
+		List<Student> students;
+	}
+
+ii) Standalone classes
+		which contains main() method to run on command prompt
+iii) Factory classes
+		Classes which creates objects of other classes
+iv) Validator  classes
+		NotNull, MinLength, MaxLength, Date, Email, URL, CreditCard, PANCard, AadharCardNo, SSNo, ZIP, Pattern/RegExpr validatons
+v) Business logic classes
+		calSal(), calTaxAmount(), calTotalCartAmount(), calTotalMarks(), calGrade(), calPercentage()
+vi) DAO (Data Access Object) classes
+		Using File I/O or JDBC API we will implement CRUD operations.
+vii) Thread classes
+		To implement Threads to make multiple methods run simultaneously
+viii) Comparable classes
+		To natural sort objects in collections based on default/PK/ID property
+		public int compareTo(Object o) {}
+ix) Comparator classes
+		To natural sort objects in collections based on other properties
+		public int compare(Object lhs, Object rhs) {}
+x) Remote classes
+		RMI, CORBA, EJB, SOAP WebServices, RESTful WebServices
+xi) Web Components / Servlet classes
+		Servlets, JSP, Struts Action, Spring Controller, JSF ManagedBean classes etc
+
+To all the above said classes java.lang.Object is the super most class.
+
+
+
+
+// Emp.java
+public class Emp {
+   
+   int eid;
+   String ename;
+   double sal;
+   String desig;
+   
+   // convert and return object state as single String
+   public String toString() {
+      return eid+" "+ename+" "+sal+" "+desig;
+   }
+   
+   // Compare every instance variable of current object with the instance variables of object passed for the comparison
+   
+   public boolean equals(Object o) {
+      boolean flag=false;
+   
+      /* if object is directly type casted into Emp class type. If the passed object is not of type Emp, ClassNotFoundException arises */
+      // Emp e=(Emp)o;
+	  
+	  if(o instanceof Emp) {
+	      Emp e=(Emp)o;
+		  if(this.eid==e.eid && this.ename.equals(e.ename) && this.sal==e.sal && this.desig.equals(e.desig)) {
+		     flag=true;
+		  }
+	  }
+	  return flag;
+   }
+   
+   public int hashCode() {
+      return this.toString().hashCode();
+   }
+   
+   /* duplicate, creating one more copy of the object of same class with the same state - deep cloning or giving the same object reference to one more reference - shallow cloning
+   */
+   public Object clone() {
+      // return this; // shallow cloning
+	  
+	  /* deep cloning */
+	  Emp e=new Emp();
+	  e.eid=eid;
+	  e.ename=ename;
+	  e.sal=sal;
+	  e.desig=desig;
+	  return e;
+   } 
+}
+
+// EmpCloneClient.java
+public class EmpCloneClient {
+   public static void main(String rags[]) {
+     Emp e1=new Emp();
+	 e1.eid=1;
+	 e1.eid="ABC";
+	 e1.eid=300000.00;
+	 e1.eid="Designer;
+	 
+     Emp e2=e1.clone();
+	 
+	 if(e1==e2) {
+	    System.out.println("e1 and e2 objects are pointing to same memory location");
+	 } else {
+	    System.out.println("e1 and e2 objects are not pointing to same memory location");
+	 }
+	 
+	 System.out.println(e1);
+   }
+}
+
+Note: Even in deep cloning primitive members are deep cloned and object references are shallow cloned.
+
+Note: To normal java classes Constructor and finalize() methods will act like a lifecycle methods because to create object of a class, class constructor is used, before garbage collector garbage collecting our objects finalize() method is called.
+
+wait(), notify(), notifyAll():
+------------------------------
+Why wait(), notify() and notifyAll() methods are given in Object class, so that those methods are available to all Java class, since those methods belongs to Threads?
+
+class A {
+	void x() {}
+	void y() {}
+	void z() {}
+}
+
+class B {
+	void l() {}
+	void m() {}
+	void n() {}
+}
+
+Threads is a SSS topic. 
+
+class Client {
+	p s v m(String rags[]) {
+		A a=new A();
+		a.x();
+		a.y();
+		a.z();
+		
+		B b=new B();
+		b.l();
+		b.m();
+		b.n();
+		
+		// Sequential method execution, until each method execution is completed, the other method execution doesn't start.
+	}
+}
+
+Our requirement is we want to x() and y() methods run independently, don't want to wait until one method execution complete to start other method execution. The samething for l() & m() methods also. We want to run them simultaneously.
+
+As many methods we want to run simultaneously we need to implement those mnay threads.
+
+class XThread extends Thread {
+	A a;
+	XThread(A a) {
+		this.a=a;
+	}
+	public void run() {	
+		a.x();
+	}
+}
+
+class YThread extends Thread {
+	A a;
+	XThread(A a) {
+		this.a=a;
+	}
+	public void run() {	
+		a.y();
+	}
+}
+
+class ThreadsClient {
+	p s v m(String rags[]) {
+		A a=new A();
+		XThread xt=new XThread(a);
+		YThread yt=new YThread(a);
+		xt.start();
+		yt.start();
+	}
+}
+
+Ans: Normal class methods runs in Threads to run simultaneously. If methods of normal class want to run in a synchronized manner. Then the class whose methods are running in thread that class object must run in synchronized state but not thread needs to be synchronized. Hence every class in Java must have wait(), notify() methods so that they can be synchronized at any time.
+
+
+Class c=Class.forName("java.lang.Integer");
+Object o=c.newInstance();
+Integer i=(Integer)o;
+
+Class c1<String>=Class.forName("java.lang.String");
+String str=c1.newInstance();
+
+
+class System
+------------
+All variables and methods of this class are static.
+
+Hence this class need not be instantiated to invoke its variables and methods. Primarily this class is not having any public constructor. Perhaps constructor is declared as private. Classes which are not having public constructor and declared its variables and methods as static will act like a singleton classes.
+
+This class is having variable to access STDIN and STDOUT.
+
+This class is having methods to access SecurityManager, Environment variables, loading external files, native libraries such as dll files (dll file directory must be updated in the PATH), to explicitly run garbage collector, to access current system time in milliseconds from Jan 1st, 1970 to till date, methods to change STDIN and STDOUTs.
+
+Variables:
+public static InputStream in;
+public static PrintStream out;
+public static PrintStream err;
+
+Because in System class IN, OUT and ERR are static object references of InputStream and PrintStream classes we can call them using System.in and System.out. Because PrintStream class print() and println() methods are non-static we are calling print() and println() methods using out and err object. Hence we write System.out.println().
+
+Methods:
+public static void arrayCopy(Object srcArray, int srcIndex, Object destArray, int destIndex, int length)
+Note: Object is the super class to all types of arrays also.
+
+public static long currentTimeMillis()
+
+public static void exit(int status)
+0 argument normally terminates JVM
+any non-zero value terminates JVM abnormally
+
+public static void gc()
+
+public static Properties getProperties()
+public static String getProperty(String propertyName)
+public static Map<String,String> getenv()
+
+public static SecurityManager getSecurityManager()
+Through SecurityManager we can restrict access to Files, Sockets and Printer on the standalone machine.
+
+public static void load(String fileName)
+public static void loadLibrary(String libName)
+
+public static void setIn(InputStream is)
+public static void setOut(OutputStream os)
+public static void setErr(OutputStream os)
+public static Console getConsole()
+By default the Console class object points to keyboard and monitor. If STDIN and STDOUT are changed through setIn() and setOut() method of System class then Console points to those devices.
+
+// DisplaySystemPropertiesEnvVars.java
+import java.util.*;
+import java.io.*;
+public class DisplaySystemPropertiesEnvVars {
+    public static void main(String rags[]) throws Exception {
+	    /* Properties p=System.getProperties();
+		Enumeration en=p.propertyNames();
+		while(en.hasMoreElements()) {
+		     String name=en.nextElement().toString();
+			 String value=p.getProperty(name);
+			 System.out.println(name+"\t\t\t"+value);
+        }
+		*/
+		
+		/*
+		Map<String,String> map=System.getenv();
+		Set<String> set=map.keySet();
+		for(String key:set) {
+		   System.out.println(key+"\t\t\t"+map.get(key));
+		}
+		*/
+		
+		/*
+		System.out.println("Current Time in Millisecond "+System.currentTimeMillis());
+		System.out.println("date and Time "+new java.util.Date(System.currentTimeMillis()));
+		*/
+		
+		PrintStream ps=new PrintStream(new FileOutputStream("STDOUT.txt"));
+		System.setOut(ps);
+		
+		System.out.println("Hello");
+		System.out.println("Hai");
+		System.out.println("Bye");		
+	}
+}
+
+>java DisplaySystemPropertiesEnvVars >> props.txt
+>java DisplaySystemPropertiesEnvVars >> env.txt
+
+class Class:
+============
+Introspection in Java using class name called Class:
+----------------------------------------------------
+class - keyword
+Class - pre-defined class
+
+Introspection is a method/procedure to retrieve/examine the details of a class, its super class, super interfaces, variables, constructors and methods exist in a class. At runtime whatever we give to Class object, class named Class can give the above said details.
+
+Whenever our class runs in some others context such as running a class in a framework, running in a container, running in web or application server. The server and frameworks will use introspection only to instantiate our class and invokes methods on our class object.
+
+Introspection API exist in reflection package (java.lang.reflect).
+
+Class c=Class.forName(rags[0]);
+Pass any fully qualified class name through rags[0].
+
+The class Class is having methods called
+Package getPackage()
+int getModifiers()
+String getName()
+Class getSuperClass()
+Class[] getInterfaces()
+Field[] getFields()
+Constructor[] getConstructors()
+Method[] getMethods()
+
+All the above said classes exist in java.lang.reflect package.
+
+Package class is having 
+String getName() method
+
+Field class is having
+String getName()
+Class getType()
+int getModifiers()
+
+Method class is having
+String getName()
+Class getReturnType()
+int getModifiers()
+Class[] getParameterTypes()
+Class[] getExceptionTypes()
+
+Constructor class having
+String getName()
+int getModifiers()
+Class[] getParameterTypes()
+
+// ReflectionDemo.java
+import java.lang.reflect.*;
+public class ReflectionDemo {
+    public static void main(String rags[]) throws Exception {
+	     Class c=Class.forName(rags[0]);
+		 System.out.println("Class Name is "+c.getName());
+		 System.out.println("************************************************");
+		 System.out.println("instance is "+c.newInstance());
+		 System.out.println("************************************************");
+		 try { System.out.println("super class "+c.getSuperclass().getName()); } catch(Exception e) {}
+		 System.out.println("************************************************");
+		 System.out.println("access modifiers "+c.getModifiers());
+		 System.out.println("************************************************");
+		 Class c1[]=c.getInterfaces();
+		 int len1=c1.length;
+		 for(int i=0;i<len1;i++){
+		    System.out.println("super interface is "+c1[i].getName());
+		}
+		 System.out.println("************************************************");
+		 
+		 Field f1[]=c.getFields();
+		 len1=f1.length;
+		 for(int i=0;i<len1;i++){
+		    System.out.println("Field Name is "+f1[i].getName()+", field type is "+f1[i].getType()+", modifiers are "+f1[i].getModifiers());
+		}
+	    System.out.println("************************************************");
+		 
+		 Constructor con1[]=c.getConstructors();
+		 len1=con1.length;
+		 for(int i=0;i<len1;i++){
+		    System.out.println("Constructor name is  "+con1[i].getName()+", modifiers are "+con1[i].getModifiers());
+			Class[] ptc=con1[i].getParameterTypes();
+			for( int j=0;j<ptc.length;j++) {
+			   System.out.println("\t\t parameter type is "+ptc[j].getName());
+			}
+		}
+	    System.out.println("************************************************");
+		
+		 Method met1[]=c.getMethods();
+		 len1=met1.length;
+		 for(int i=0;i<len1;i++){
+		    System.out.println("Method name is  "+met1[i].getName()+", modifiers are "+met1[i].getModifiers()+", return type is  "+met1[i].getReturnType().getName());
+			Class[] ptc=met1[i].getParameterTypes();
+			for( int j=0;j<ptc.length;j++) {
+			   System.out.println("\t\t parameter type is "+ptc[j].getName());
+			}
+		}
+	}
+}
+
+One more example on Introspection:
+----------------------------------
+import java.lang.Class;
+import java.lang.reflect.Field;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
+class IntrospectionDemo {
+	
+	public static void main(String rags[]) {
+	
+		// Class c=Class.forName("java.lang.String");
+		Class c=Class.forName(rags[0]);
+
+		int i=c.getModifiers();
+		Class sc=c.getSuperClass();
+			System.out.println(sc.getPackage().getName()+" "+sc.getName());
+			
+		Class intfs[]=c.getSuperInterfaces();
+			for(Class intf:intfs) {
+				System.out.println(intf.getPackage().getName()+" "+intf.getName());
+			}
+			
+		Field fs[]=c.getFields();
+			for(Field f:fs) {
+				System.out.println("Modifiers "+f.getModifiers());
+				System.out.println("Datatype "+f.getType());
+				System.out.println("Var name "+f.getName());
+			}
+			
+		Constructor constrs[]=c.getConstructors();
+			for(Constructor constr:constrs) {
+				System.out.println("Modifiers "+constr.getModifiers());
+				System.out.println("Name "+constr.getName());
+				System.out.println("Parameters count "+constr.getParameterCount());
+				System.out.println("Exceptions count "+constr.getExceptionTypes().length);
+			}
+			
+		Method mets[]=c.getMethods();
+			for(Method met:mets) {
+				System.out.println("Modifiers "+met.getModifiers());
+				System.out.println("Name "+met.getName());
+				System.out.println("Return type "+met.getReturnType().getName());
+				System.out.println("Parameters count "+met.getParameterCount());
+				System.out.println("Exceptions count "+met.getExceptionTypes().length);
+			}
+	}
+}	
+
+
+Process and Runtime classes
+------------------------------------
+Process class is a abstract class which cannot be directly instantiated, instead this class object is returned to Runtime class exec() method.
+
+Runtime class also cannot be directly instantiated because there is no public constructor exist in this class. The constructor is made as private. 
+
+Then how Runtime class can be instantiated and why is its constructor is made as private?
+The actual purpose of Runtime class is to access the current JVM runtime environment. The current JVM env is nothing but from command prompt we will start java ClassName. JVM starts and ClassName will run in the JVM, in whichever JVM the ClassName is running in that class if we write Runtime.getRuntime() that corresponding JVM reference will be returned into java program.
+
+class SomeClass {
+   public static void main(String rags[]) {
+     Runtime rt=Runtime.getRuntime();
+
+   }
+}
+
+javac SomeClass.java
+java SomeClass
+
+Because we donot want  a new JVM instead in whichever JVM our Java program is running if that JVM want to be fetched instead of creating Runtime class object using new operator and constructor, its static method must be used. 
+Runtime rt=Runtime.getRuntime();
+
+The purpose of getting current JVM reference is to invoke the native components of the current OS from java program.
+
+In Windows .exe, cmd, .bat are self executable files. In Unix and Linux .sh files, in Solaris .so files are OS native files. These files can run from the command prompt of Windows OS, shell prompt of Unix and Linux OSs. But if these programs want to run from java program we need current JVM object reference.
+
+Important methods of Runtime class:
+Runtime getRuntime()
+
+void exit(int status)
+void halt(int status)
+
+exec(String file) - will take .exe filename if its directory is updated in the PATH, if .exe containing directory is not updated in the PATH then the entire .exe file path including filename must be passed as argument into exec() method.
+
+int availableProcessors()
+long freeMemnory()
+long maxMemory()
+long totalMemory()
+
+void gc() - calls garbage collector explicitly
+
+traceInstructions(boolean on)
+traceMethodCalls(boolean on)
+
+// RuntimeDemo.java
+public class RuntimeDemo {
+    public static void main(String rags[]) throws Exception {
+		Runtime rt=Runtime.getRuntime();
+
+	    rt.traceInstructions(true);
+	    rt.traceMethodCalls(true);
+
+        System.out.println(rt.availableProcessors());
+        System.out.println(rt.freeMemnory());
+        System.out.println(rt.maxMemory());
+        System.out.println(rt.totalMemory());
+		
+		Process p=rt.exec(rags[0]);
+		
+		rt.exit(0);
+	}
+}
+
+Process, Runtime classes:
+-------------------------
+Runtime class is a accessor to current JVM.
+
+java SomeClassName
+		ABC
+			XYZ
+				LMN
+					MNO
+	
+JVM starts, in that JVM the given class will be loaded and executed from main() method. In that program if we want to access current JVM we must get the instance/object of Runtime class.
+
+How to get the JVM/ Runtime object?
+Runtime rt=Runtime.getRuntime();
+
+Runtime class is a singleton class, no public construcutor exist in this class. One static method/factory method is provided in the same class called getRuntime() that returns the same Runtime class object.
+
+Why Runtime class is singleton?
+Becuase the classes running in one JVM wants to access the same currently running JVM object but not new object. Hence no public constructor is give, instead factory method is given to obtain the object.
+
+What is the purpose of Runtime class?
+i) To access the available memory, alloted memory, consumed memory, left over memory
+long tm=rt.totalMemory();
+long mm=rt.maxMemory();
+long fm=rt.freeMemory();
+
+ii) To call the garbage collector
+rt.gc()
+
+iii) We can run OS native components also
+Process p1=rt.exec("notepad");
+	System.out.println(p1.getClass().getName());
+Process p2=rt.exec("calc");
+Process p3=rt.exec("mspaint");
+
+InputStream is=p1.getInputStream();
+	is object is used to get the output gerenerated by notepad process. is object is having read() method.
+	String output=new DataInputStream(is.read()).readLine();
+	
+OutputStream os=p1.getOutputStream();
+	os object is used to write some input into process. OutputStream class is having write() method.
+	new DataOutputStream(os.write()).writeBytes("mylog.log");
+	
+InputStream es=p1.getErrorStream();
+	String error=new DataInputStream(es.read()).readLine();
+
+
+
+

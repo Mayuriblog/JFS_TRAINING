@@ -1,0 +1,14 @@
+int[] arr={1,1,3,5,2,6,2,8,9,12}
+
+1.Find minimum value in an array
+2.Find a minimum value in an array using streams
+3.Find maximum value in an array
+4.Find a maximum value in an array using streams
+5.Find the distinct values in an array
+6.Find the distinct values in an array using streams
+7.Find the no of distinct values in an array
+8.Find the no of distinct values in an array using streams
+
+
+
+
